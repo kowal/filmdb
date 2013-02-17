@@ -9,7 +9,7 @@ describe MoviesReport do
     it "should find movies included in the page" do
       movies = MoviesReport::DSL.parse_html 'http://chomikuj.pl/SHREC'
 
-      expect(movies).to include 'Młody Einstein--orginalny lektor.pl.avi'
+      expect(movies).to include 'Młody Einstein'
     end
 
   end
