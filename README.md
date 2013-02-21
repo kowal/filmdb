@@ -18,7 +18,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+	report = MoviesReport::DSL.parse_html "http://chomikuj.pl/foo"
+
+	report.first # => { title: 'Foo', links: [..], ratings: [7.7, 8.2, 8.0] }
 
 ## Contributing
 
