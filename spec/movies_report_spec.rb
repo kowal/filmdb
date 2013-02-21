@@ -6,7 +6,7 @@ describe MoviesReport do
   context 'run on chomikuj page' do
     it "should find movies included in the page" do
       VCR.use_cassette('chomikuj') do
-        page_html = MoviesReport::DSL.parse_html 'http://chomikuj.pl/SHREC'
+        movies_collection = MoviesReport::DSL.parse_html 'http://chomikuj.pl/SHREC'
         expected = <<-DOC
 Lot
 OCZY SMOKA
@@ -29,7 +29,6 @@ Akademia Wojskowa
 Cichy dom
 The Tall Man
 Bucky Larson. Urodzony gwiazdor
-Winda . Elevator
 Żona na niby
 Nawiedzona narzeczona
 Love guru
@@ -40,7 +39,7 @@ Stare Wygi
 Święto piwa
 DOC
         expected.split("\n").each do |title|
-          expect(page_html).to include(title)
+          expect(movies_collection).to include(title)
         end
       end
     end
