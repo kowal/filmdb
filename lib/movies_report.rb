@@ -13,12 +13,17 @@ module MoviesReport
     chomikuj Chomikuj.avi .avi dubbing.pl.avi
   }
 
+  MATCHERS = {
+    'chomikuj.pl' => '#FilesListContainer .fileItemContainer .filename'
+  }
+
   class DSL
 
     def self.parse_html(url)
-      doc = Nokogiri::HTML(Net::HTTP.get_response(URI(url)).body)
+      uri = URI(url)
+      doc = Nokogiri::HTML(Net::HTTP.get_response(uri).body)
 
-      doc.css('#FilesListContainer .fileItemContainer .filename').map do |el|
+      doc.css(MATCHERS[uri.host]).map do |el|
         { title: parse_title(el) }
       end
     end
