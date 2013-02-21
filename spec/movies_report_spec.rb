@@ -9,9 +9,11 @@ require 'spec_helper'
 describe MoviesReport do
   context 'run on chomikuj page' do
     it "should find movies included in the page" do
-      VCR.use_cassette('chomikuj') do
-        actual_movies = MoviesReport::DSL.parse_html 'http://chomikuj.pl/SHREC'
-        expected_movies = YAML::load(File.open('fixtures/expected/chomikuj.yml'))
+      site = 'chomikuj'
+
+      VCR.use_cassette(site) do
+        actual_movies = MoviesReport::DSL.parse_html "http://#{site}.com/mocked-page"
+        expected_movies = YAML::load(File.open("fixtures/expected/#{site}.yml"))
 
         expected_movies.each do |title|
           expect(actual_movies).to include(title)

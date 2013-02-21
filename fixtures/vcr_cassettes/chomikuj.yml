@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://chomikuj.pl/SHREC
+    uri: http://chomikuj.com/mocked-page
     body:
       encoding: US-ASCII
       string: ''
