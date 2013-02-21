@@ -12,12 +12,10 @@ describe MoviesReport do
       site = 'chomikuj'
 
       VCR.use_cassette(site) do
-        actual_movies = MoviesReport::DSL.parse_html "http://#{site}.com/mocked-page"
         expected_movies = YAML::load(File.open("fixtures/expected/#{site}.yml"))
+        actual_movies = MoviesReport::DSL.parse_html "http://#{site}.com/mocked-page"
 
-        expected_movies.each do |title|
-          expect(actual_movies).to include(title)
-        end
+        expect(actual_movies).to include(*expected_movies)
       end
     end
   end
