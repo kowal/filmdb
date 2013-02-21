@@ -28,7 +28,7 @@ module MoviesReport
       doc.css(MATCHERS[uri.host]).map do |el|
         title = parse_title(el)
         links = search_movies(title)
-        puts "GOT #{title}, #{links}"
+        #puts "GOT #{title}, #{links}"
 
         { title: title, links: links}
       end
