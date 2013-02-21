@@ -13,7 +13,8 @@ describe MoviesReport do
 
       VCR.use_cassette(site) do
         expected_movies = YAML::load(File.open("fixtures/expected/#{site}.yml"))
-        actual_movies = MoviesReport::DSL.parse_html "http://#{site}.com/mocked-page"
+        report = MoviesReport::DSL.parse_html "http://#{site}.com/mocked-page"
+        actual_movies = report.map { |m| m[:title] }
 
         expect(actual_movies).to include(*expected_movies)
       end

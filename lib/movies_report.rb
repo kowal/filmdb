@@ -19,9 +19,14 @@ module MoviesReport
       doc = Nokogiri::HTML(Net::HTTP.get_response(URI(url)).body)
 
       doc.css('#FilesListContainer .fileItemContainer .filename').map do |el|
-        el.content.strip.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '')
+        { title: parse_title(el) }
       end
     end
+
+    def self.parse_title(el)
+      el.content.strip.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '')
+    end
+
     # check filmweb
 
     # http://www.filmweb.pl/search?q=MOVIE_QUERY
