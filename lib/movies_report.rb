@@ -2,7 +2,6 @@ require "movies_report/version"
 require 'nokogiri'
 require "net/http"
 require "uri"
-require 'vcr'
 
 module MoviesReport
 
