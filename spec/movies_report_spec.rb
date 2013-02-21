@@ -11,9 +11,9 @@ describe MoviesReport do
     it "should find movies included in the page" do
       site = 'chomikuj'
 
-      VCR.use_cassette(site) do
-        expected_movies = YAML::load(File.open("fixtures/expected/#{site}.yml"))
-        report = MoviesReport::DSL.parse_html "http://#{site}.pl/mocked-page"
+      VCR.use_cassette(site, :record => :new_episodes) do
+        expected_movies = YAML::load(File.open("fixtures/expected/chomikuj.yml"))
+        report = MoviesReport::DSL.parse_html "http://chomikuj.pl/mocked-page"
         actual_movies = report.map { |m| m[:title] }
 
         expect(actual_movies).to include(*expected_movies)
