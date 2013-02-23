@@ -12,7 +12,7 @@ module MoviesReport
     chomikuj Chomikuj.avi .avi dubbing.pl.avi
   }
 
-  MATCHERS = {
+  HOST_TO_SELECTOR = {
     'chomikuj.pl'     => '#FilesListContainer .fileItemContainer .filename',
     'www.filmweb.pl'  => '.searchResult a.searchResultTitle'
   }
@@ -23,12 +23,14 @@ module MoviesReport
 
     def self.parse_html(url)
       uri = URI(url)
-      doc = Nokogiri::HTML(Net::HTTP.get_response(uri).body)
+      doc = fetch_document(uri)
 
-      doc.css(MATCHERS[uri.host]).map do |el|
+      doc.css(HOST_TO_SELECTOR[uri.host]).map do |el|
         title = parse_title(el)
         links = search_movies(title)
-        #puts "GOT #{title}, #{links}"
+        # doc = Net::HTTP.get_response(URI("http://#{links.first.last}"))
+        # ap [ title, links.first, doc ]
+        # ap "------------"
 
         { title: title, links: links}
       end
@@ -40,11 +42,16 @@ module MoviesReport
 
     def self.search_movies(title)
       uri = URI(CHECK_MOVIE_URL % CGI::escape(title))
-      doc = Nokogiri::HTML(Net::HTTP.get_response(uri).body)
+      doc = fetch_document(uri)
 
-      doc.css(MATCHERS[uri.host]).map do |el|
-        [el.content.strip, el.attr('href')]
+      doc.css(HOST_TO_SELECTOR[uri.host]).map do |el|
+        [el.content.strip, uri.host + el.attr('href')]
       end
     end
+
+    def self.fetch_document(uri)
+      Nokogiri::HTML(Net::HTTP.get_response(uri).body)
+    end
+
   end
 end
