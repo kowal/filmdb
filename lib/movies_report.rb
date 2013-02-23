@@ -2,6 +2,7 @@ require "movies_report/version"
 require 'nokogiri'
 require "net/http"
 require "uri"
+require "awesome_print"
 
 module MoviesReport
 
@@ -13,8 +14,8 @@ module MoviesReport
   }
 
   HOST_TO_SELECTOR = {
-    'chomikuj.pl'     => '#FilesListContainer .fileItemContainer .filename',
-    'www.filmweb.pl'  => '.searchResult a.searchResultTitle'
+    chomikuj: '#FilesListContainer .fileItemContainer .filename',
+    filmweb:  '.searchResult a.searchResultTitle'
   }
 
   CHECK_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
@@ -25,7 +26,7 @@ module MoviesReport
       uri = URI(url)
       doc = fetch_document(uri)
 
-      doc.css(HOST_TO_SELECTOR[uri.host]).map do |el|
+      each_movie_title(doc) do |el|
         title = parse_title(el)
         links = search_movies(title)
         # doc = Net::HTTP.get_response(URI("http://#{links.first.last}"))
@@ -44,10 +45,24 @@ module MoviesReport
       uri = URI(CHECK_MOVIE_URL % CGI::escape(title))
       doc = fetch_document(uri)
 
-      doc.css(HOST_TO_SELECTOR[uri.host]).map do |el|
+      each_search_result(doc) do |el|
         [el.content.strip, uri.host + el.attr('href')]
       end
     end
+
+    def self.each_movie_title(document, &block)
+      document.css(HOST_TO_SELECTOR[:chomikuj]).map do |el|
+        yield(el)
+      end
+    end
+
+    def self.each_search_result(document, &block)
+      document.css(HOST_TO_SELECTOR[:filmweb]).map do |el|
+        yield(el)
+      end
+    end
+
+    private
 
     def self.fetch_document(uri)
       Nokogiri::HTML(Net::HTTP.get_response(uri).body)
