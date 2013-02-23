@@ -32,7 +32,9 @@ module MoviesReport
       each_movie_title(@movies_doc) do |el|
         title = sanitize_movie_title(el)
         links = Search.new(title).links
-        # doc = Net::HTTP.get_response(URI("http://#{links.first.last}"))
+
+        # TODO: parse ratings from..
+        doc = Net::HTTP.get_response(URI("http://#{links.first.last}"))
         # ap [ title, links.first, doc ]
         # ap "------------"
 
