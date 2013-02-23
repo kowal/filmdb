@@ -6,29 +6,32 @@ require "awesome_print"
 
 module MoviesReport
 
-  TO_REMOVE = %w{ .BRRiP MX DVDRiP DVDRip XViD PSiG
-    lektor Lektor lekyor .napisy
-    -orgonalny --orgonalny --orgoinalny .oryginalny oryginalny --oryginalny --orginalny orginalny
-    .pl PL ivo
-    chomikuj Chomikuj.avi .avi dubbing.pl.avi
-  }
+  module FetchDocument
+    def fetch_document(uri)
+      Nokogiri::HTML(Net::HTTP.get_response(uri).body)
+    end
+  end
 
-  HOST_TO_SELECTOR = {
-    chomikuj: '#FilesListContainer .fileItemContainer .filename',
-    filmweb:  '.searchResult a.searchResultTitle'
-  }
+  class Report
+    include FetchDocument
 
-  CHECK_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
+    TO_REMOVE = %w{ .BRRiP MX DVDRiP DVDRip XViD PSiG
+      lektor Lektor lekyor .napisy
+      -orgonalny --orgonalny --orgoinalny .oryginalny oryginalny --oryginalny --orginalny orginalny
+      .pl PL ivo
+      chomikuj Chomikuj.avi .avi dubbing.pl.avi
+    }
 
-  class DSL
+    def initialize(movies_url)
+      @movies_url = movies_url
+      @movies_uri = URI(@movies_url)
+      @movies_doc = fetch_document(@movies_uri)
+    end
 
-    def self.parse_html(url)
-      uri = URI(url)
-      doc = fetch_document(uri)
-
-      each_movie_title(doc) do |el|
-        title = parse_title(el)
-        links = search_movies(title)
+    def run!
+      each_movie_title(@movies_doc) do |el|
+        title = sanitize_movie_title(el)
+        links = Search.new(title).links
         # doc = Net::HTTP.get_response(URI("http://#{links.first.last}"))
         # ap [ title, links.first, doc ]
         # ap "------------"
@@ -37,12 +40,28 @@ module MoviesReport
       end
     end
 
-    def self.parse_title(el)
+    def sanitize_movie_title(el)
       el.content.strip.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '')
     end
 
-    def self.search_movies(title)
-      uri = URI(CHECK_MOVIE_URL % CGI::escape(title))
+    def each_movie_title(document, &block)
+      document.css('#FilesListContainer .fileItemContainer .filename').map do |el|
+        yield(el)
+      end
+    end
+  end
+
+  class Search
+    include FetchDocument
+
+    SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
+
+    def initialize(title)
+      @title = title
+    end
+
+    def links
+      uri = URI(SEARCH_MOVIE_URL % CGI::escape(@title))
       doc = fetch_document(uri)
 
       each_search_result(doc) do |el|
@@ -50,23 +69,16 @@ module MoviesReport
       end
     end
 
-    def self.each_movie_title(document, &block)
-      document.css(HOST_TO_SELECTOR[:chomikuj]).map do |el|
+    def each_search_result(document, &block)
+      document.css('.searchResult a.searchResultTitle').map do |el|
         yield(el)
       end
     end
+  end
 
-    def self.each_search_result(document, &block)
-      document.css(HOST_TO_SELECTOR[:filmweb]).map do |el|
-        yield(el)
-      end
+  class DSL
+    def self.parse_html(url)
+      Report.new(url).run!
     end
-
-    private
-
-    def self.fetch_document(uri)
-      Nokogiri::HTML(Net::HTTP.get_response(uri).body)
-    end
-
   end
 end
