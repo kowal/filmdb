@@ -13,43 +13,70 @@ module MoviesReport
     end
   end
 
+  module Movie
+
+    class Chomikuj
+
+      attr_reader :title, :size
+
+      def initialize(title, size=nil)
+        @title = title
+        @size = size
+      end
+
+      class << self
+
+        TO_REMOVE = %w{ .BRRiP MX DVDRiP DVDRip XViD PSiG
+          lektor Lektor lekyor .napisy
+          -orgonalny --orgonalny --orgoinalny .oryginalny oryginalny --oryginalny --orginalny orginalny
+          .pl PL ivo
+          chomikuj Chomikuj.avi .avi dubbing.pl.avi
+        }
+
+        def sanitize_title(el)
+          el.content.strip.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '')
+        end
+
+        def each_movie(document, &block)
+          document.css('#FilesListContainer .fileItemContainer').map do |el|
+
+            title = sanitize_title(el.css('.filename').first)
+            size = el.css('.fileinfo li:nth-last-child(2)').first.content
+
+            yield(self.new(title, size))
+          end
+        end
+
+      end
+    end
+  end
+
   class Report
     include FetchDocument
-
-    TO_REMOVE = %w{ .BRRiP MX DVDRiP DVDRip XViD PSiG
-      lektor Lektor lekyor .napisy
-      -orgonalny --orgonalny --orgoinalny .oryginalny oryginalny --oryginalny --orginalny orginalny
-      .pl PL ivo
-      chomikuj Chomikuj.avi .avi dubbing.pl.avi
-    }
 
     def initialize(movies_url)
       @movies_url = movies_url
       @movies_uri = URI(@movies_url)
       @movies_doc = fetch_document(@movies_uri)
+      @engine     = Movie::Chomikuj # @todo: inject
     end
 
     def run!
-      each_movie_title(@movies_doc) do |el|
-        title = sanitize_movie_title(el)
-        ratings = {}
-        ratings[:filmweb] = Search::Filmweb.new(title).rating
-        ratings[:imdb] = Search::IMDB.new(title).rating
+      @engine.each_movie(@movies_doc) do |movie|
+        title = movie.title
+        ratings = build_rankings(title)
 
-        ap "=> #{title} (#{ratings})"
+        ap "=> #{title} (#{ratings}) [#{movie.size}]"
 
         { title: title, ratings: ratings }
       end
     end
 
-    def sanitize_movie_title(el)
-      el.content.strip.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '')
-    end
-
-    def each_movie_title(document, &block)
-      document.css('#FilesListContainer .fileItemContainer .filename').map do |el|
-        yield(el)
-      end
+    def build_rankings(title)
+      ratings = {}
+      ratings[:filmweb] = Search::Filmweb.new(title).rating
+      ratings[:imdb] = Search::IMDB.new(title).rating
+      ratings
     end
   end
 
