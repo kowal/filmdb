@@ -17,24 +17,25 @@ module MoviesReport
 
     class Chomikuj
 
-      attr_reader :title, :size
+      # attr_reader :title, :size
 
-      def initialize(title, size=nil)
-        @title = title
-        @size = size
-      end
+      # def initialize(title, size=nil)
+      #   @title = title
+      #   @size = size
+      # end
 
       class << self
 
-        TO_REMOVE = %w{ .BRRiP MX DVDRiP DVDRip XViD PSiG
-          lektor Lektor lekyor .napisy
+        TO_REMOVE = %w{ .BRRiP MX DVDRiP DVDRip XViD PSiG XviD.AC3-PBWT XviD AC3-PBWT 480p AC3-MORS
+          XviD.Zet XviD-Zet .-Zet XviD-BiDA .XviD .PDTV .BRRip-BiDA ..BRRip .-BiDA DRip-BiDA .HDTV TVRip
+          lektor Lektor lekyor .napisy SUBBED.B SUBBED
           -orgonalny --orgonalny --orgoinalny .oryginalny oryginalny --oryginalny --orginalny orginalny
           .pl PL ivo
           chomikuj Chomikuj.avi .avi dubbing.pl.avi
         }
 
         def sanitize_title(el)
-          el.content.strip.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '')
+          el.content.strip.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '').gsub(/\(\d+\)/, '')
         end
 
         def each_movie(document, &block)
@@ -43,7 +44,7 @@ module MoviesReport
             title = sanitize_title(el.css('.filename').first)
             size = el.css('.fileinfo li:nth-last-child(2)').first.content
 
-            yield(self.new(title, size))
+            yield({ title: title, size: size })
           end
         end
 
@@ -63,10 +64,10 @@ module MoviesReport
 
     def run!
       @engine.each_movie(@movies_doc) do |movie|
-        title = movie.title
+        title = movie[:title]
         ratings = build_rankings(title)
 
-        ap "=> #{title} (#{ratings}) [#{movie.size}]"
+        ap "=> #{title} (#{ratings}) [#{movie[:size]}]"
 
         { title: title, ratings: ratings }
       end
@@ -111,6 +112,7 @@ module MoviesReport
 
       # fetch ratings from 1st result:
       def rating
+        return '' unless @results.first
         movie_details_doc = fetch_document(URI(@results.first[:url]))
         el = movie_details_doc.css(".filmRating *[rel='v:rating']").first
         el.content.strip.gsub(',', '.').to_f if el
@@ -135,7 +137,9 @@ module MoviesReport
   end
 
   class DSL
-    def self.parse_html(url)
+    def self.parse_html(url=nil)
+      raise 'No url given!' unless url
+
       Report.new(url).run!
     end
   end
