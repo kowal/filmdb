@@ -31,14 +31,11 @@ module MoviesReport
     def run!
       each_movie_title(@movies_doc) do |el|
         title = sanitize_movie_title(el)
-        links = Search.new(title).links
+        ratings = Search::Filmweb.new(title).ratings
 
-        # TODO: parse ratings from..
-        doc = Net::HTTP.get_response(URI("http://#{links.first.last}"))
-        # ap [ title, links.first, doc ]
-        # ap "------------"
+        # ap [ title, ratings ]
 
-        { title: title, links: links}
+        { title: title, ratings: ratings }
       end
     end
 
@@ -53,27 +50,38 @@ module MoviesReport
     end
   end
 
-  class Search
-    include FetchDocument
+  module Search
+    class Filmweb
+      include FetchDocument
 
-    SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
+      SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
 
-    def initialize(title)
-      @title = title
-    end
-
-    def links
-      uri = URI(SEARCH_MOVIE_URL % CGI::escape(@title))
-      doc = fetch_document(uri)
-
-      each_search_result(doc) do |el|
-        [el.content.strip, uri.host + el.attr('href')]
+      def initialize(title)
+        @title = title
+        @results = read_results
       end
-    end
 
-    def each_search_result(document, &block)
-      document.css('.searchResult a.searchResultTitle').map do |el|
-        yield(el)
+      # fetch ratings from 1st result:
+      def ratings
+        movie_details_doc = fetch_document(URI(@results.first[:url]))
+        el = movie_details_doc.css(".filmRating *[rel='v:rating']").first
+        el.content if el
+      end
+
+      # @return [ [title, url], ... ]
+      def read_results
+        uri = URI(SEARCH_MOVIE_URL % CGI::escape(@title))
+        doc = fetch_document(uri)
+
+        each_search_result(doc) do |el|
+          { title: el.content.strip, url: "http://#{uri.host}#{el.attr('href')}" }
+        end
+      end
+
+      def each_search_result(document, &block)
+        document.css('.searchResult a.searchResultTitle').map do |el|
+          yield(el)
+        end
       end
     end
   end
