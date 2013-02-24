@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "nokogiri"
+  gem.add_dependency "imdb"
   gem.add_dependency "awesome_print"
 
   gem.add_development_dependency "rspec"

@@ -3,6 +3,7 @@ require 'nokogiri'
 require "net/http"
 require "uri"
 require "awesome_print"
+require "imdb"
 
 module MoviesReport
 
@@ -31,9 +32,11 @@ module MoviesReport
     def run!
       each_movie_title(@movies_doc) do |el|
         title = sanitize_movie_title(el)
-        ratings = Search::Filmweb.new(title).ratings
+        ratings = {}
+        ratings[:filmweb] = Search::Filmweb.new(title).rating
+        ratings[:imdb] = Search::IMDB.new(title).rating
 
-        # ap [ title, ratings ]
+        ap "=> #{title} (#{ratings})"
 
         { title: title, ratings: ratings }
       end
@@ -51,21 +54,39 @@ module MoviesReport
   end
 
   module Search
-    class Filmweb
-      include FetchDocument
 
-      SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
+    class BaseSearch
+      include FetchDocument
 
       def initialize(title)
         @title = title
         @results = read_results
       end
+    end
+
+    # use the gem
+    class IMDB < BaseSearch
+
+      def rating
+        movie = @results.first
+        movie.rating if movie
+      end
+
+      def read_results
+        Imdb::Search.new(@title).movies
+      end
+
+    end
+
+    class Filmweb < BaseSearch
+
+      SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
 
       # fetch ratings from 1st result:
-      def ratings
+      def rating
         movie_details_doc = fetch_document(URI(@results.first[:url]))
         el = movie_details_doc.css(".filmRating *[rel='v:rating']").first
-        el.content if el
+        el.content.strip.gsub(',', '.').to_f if el
       end
 
       # @return [ [title, url], ... ]
