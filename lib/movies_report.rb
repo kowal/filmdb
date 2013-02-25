@@ -10,6 +10,10 @@ module MoviesReport
   module FetchDocument
     def fetch_document(uri)
       Nokogiri::HTML(Net::HTTP.get_response(uri).body)
+    rescue => e
+      ap "Cant fetch document from : '#{uri}' #{e.message}"
+      ap e.backtrace
+      nil
     end
   end
 
@@ -39,6 +43,8 @@ module MoviesReport
         end
 
         def each_movie(document, &block)
+          return unless document
+
           document.css('#FilesListContainer .fileItemContainer').map do |el|
 
             title = sanitize_title(el.css('.filename').first)
@@ -102,6 +108,10 @@ module MoviesReport
 
       def read_results
         Imdb::Search.new(@title).movies
+      rescue => e
+        ap "Can fetch IMDB results for #{@title}"
+        ap e.message
+        []
       end
 
     end
@@ -129,6 +139,7 @@ module MoviesReport
       end
 
       def each_search_result(document, &block)
+        return unless document
         document.css('.searchResult a.searchResultTitle').map do |el|
           yield(el)
         end
