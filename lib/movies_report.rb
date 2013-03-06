@@ -1,4 +1,5 @@
 require "movies_report/version"
+require "movies_report/sanitizer"
 require 'nokogiri'
 require "net/http"
 require "uri"
@@ -21,25 +22,10 @@ module MoviesReport
 
     class Chomikuj
 
-      # attr_reader :title, :size
-
-      # def initialize(title, size=nil)
-      #   @title = title
-      #   @size = size
-      # end
-
       class << self
 
-        TO_REMOVE = %w{ .BRRiP MX DVDRiP DVDRip XViD PSiG XviD.AC3-PBWT XviD AC3-PBWT 480p AC3-MORS
-          XviD.Zet XviD-Zet .-Zet XviD-BiDA .XviD .PDTV .BDRip-max184 .BRRip-BiDA ..BRRip .-BiDA DRip-BiDA .HDTV TVRip
-          lektor Lektor lekyor .napisy SUBBED.B SUBBED -LEKTOR
-          -orgonalny --orgonalny --orgoinalny .oryginalny oryginalny --oryginalny --orginalny orginalny
-          .pl PL ivo IVO Ivo
-          chomikuj Chomikuj.avi .avi dubbing.pl.avi
-        }
-
         def sanitize_title(original_title)
-          sanitized_title = original_title.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '').gsub(/\(\d+\)/, '')
+          sanitized_title = MoviesReport::Sanitizer.clean(original_title)
           ap "'#{original_title}' => '#{sanitized_title}'"
           sanitized_title
         end
