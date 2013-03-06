@@ -31,15 +31,17 @@ module MoviesReport
       class << self
 
         TO_REMOVE = %w{ .BRRiP MX DVDRiP DVDRip XViD PSiG XviD.AC3-PBWT XviD AC3-PBWT 480p AC3-MORS
-          XviD.Zet XviD-Zet .-Zet XviD-BiDA .XviD .PDTV .BRRip-BiDA ..BRRip .-BiDA DRip-BiDA .HDTV TVRip
-          lektor Lektor lekyor .napisy SUBBED.B SUBBED
+          XviD.Zet XviD-Zet .-Zet XviD-BiDA .XviD .PDTV .BDRip-max184 .BRRip-BiDA ..BRRip .-BiDA DRip-BiDA .HDTV TVRip
+          lektor Lektor lekyor .napisy SUBBED.B SUBBED -LEKTOR
           -orgonalny --orgonalny --orgoinalny .oryginalny oryginalny --oryginalny --orginalny orginalny
-          .pl PL ivo
+          .pl PL ivo IVO Ivo
           chomikuj Chomikuj.avi .avi dubbing.pl.avi
         }
 
-        def sanitize_title(el)
-          el.content.strip.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '').gsub(/\(\d+\)/, '')
+        def sanitize_title(original_title)
+          sanitized_title = original_title.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '').gsub(/\(\d+\)/, '')
+          ap "'#{original_title}' => '#{sanitized_title}'"
+          sanitized_title
         end
 
         def each_movie(document, &block)
@@ -47,7 +49,7 @@ module MoviesReport
 
           document.css('#FilesListContainer .fileItemContainer').map do |el|
 
-            title = sanitize_title(el.css('.filename').first)
+            title = sanitize_title(el.css('.filename').first.content.strip)
             size = el.css('.fileinfo li:nth-last-child(2)').first.content
 
             yield({ title: title, size: size })
@@ -73,7 +75,7 @@ module MoviesReport
         title = movie[:title]
         ratings = build_rankings(title)
 
-        ap "=> #{title} (#{ratings}) [#{movie[:size]}]"
+        # ap "=> #{title} (#{ratings}) [#{movie[:size]}]"
 
         { title: title, ratings: ratings }
       end
