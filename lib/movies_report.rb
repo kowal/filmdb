@@ -26,7 +26,7 @@ module MoviesReport
 
         def sanitize_title(original_title)
           sanitized_title = MoviesReport::Sanitizer::Chomikuj.clean(original_title)
-          ap "'#{original_title}' => '#{sanitized_title}'"
+          # ap "'#{original_title}' => '#{sanitized_title}'"
           sanitized_title
         end
 
