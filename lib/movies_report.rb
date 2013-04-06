@@ -1,5 +1,5 @@
 require "movies_report/version"
-require "movies_report/sanitizer"
+require "movies_report/sanitizer/chomikuj"
 require 'nokogiri'
 require "net/http"
 require "uri"
@@ -25,7 +25,7 @@ module MoviesReport
       class << self
 
         def sanitize_title(original_title)
-          sanitized_title = MoviesReport::Sanitizer.clean(original_title)
+          sanitized_title = MoviesReport::Sanitizer::Chomikuj.clean(original_title)
           ap "'#{original_title}' => '#{sanitized_title}'"
           sanitized_title
         end
