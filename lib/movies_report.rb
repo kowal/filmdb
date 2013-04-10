@@ -33,10 +33,10 @@ module MoviesReport
         def each_movie(document, &block)
           return unless document
 
-          document.css('#FilesListContainer .fileItemContainer').map do |el|
+          document.css('#foldersList a').map do |el|
 
-            title = sanitize_title(el.css('.filename').first.content.strip)
-            size = el.css('.fileinfo li:nth-last-child(2)').first.content
+            title = sanitize_title(el.content.strip)
+            size = 'None' #el.css('.fileinfo li:nth-last-child(2)').first.content
 
             yield({ title: title, size: size })
           end
@@ -61,7 +61,7 @@ module MoviesReport
         title = movie[:title]
         ratings = build_rankings(title)
 
-        # ap "=> #{title} (#{ratings}) [#{movie[:size]}]"
+        ap "=> #{title} (#{ratings}) [#{movie[:size]}]"
 
         { title: title, ratings: ratings }
       end
