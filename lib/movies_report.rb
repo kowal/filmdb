@@ -33,12 +33,28 @@ module MoviesReport
         def each_movie(document, &block)
           return unless document
 
-          document.css('#foldersList a').map do |el|
+          pages = { 
+            folder_list: {
+              selector: '#foldersList a',
+              fields: {
+                title: ->(el) { sanitize_title(el.content.strip) }
+              }
+            },
+            file_list: {
+              selector: '#FilesListContainer .fileItemContainer',
+              fields: {
+                title: ->(el) { sanitize_title(el.css('.filename').first.content.strip) },
+                size:  ->(el) { el.css('.fileinfo li:nth-last-child(2)').first.content }
+              }
+            }
+          }
 
-            title = sanitize_title(el.content.strip)
-            size = 'None' #el.css('.fileinfo li:nth-last-child(2)').first.content
+          page_type = document.css('.noFile').empty? ? :file_list : :folder_list
+          page = pages[page_type]
 
-            yield({ title: title, size: size })
+          document.css(page[:selector]).map do |el|
+            # yield calculated field values: {:title=>"XXX", :size=>"xxx"}
+            yield(Hash[page[:fields].map { |field, value_proc | [field, value_proc.call(el) ]}])
           end
         end
 
@@ -61,7 +77,7 @@ module MoviesReport
         title = movie[:title]
         ratings = build_rankings(title)
 
-        ap "=> #{title} (#{ratings}) [#{movie[:size]}]"
+        ap "=> #{title} (#{ratings}) #{movie[:size]}"
 
         { title: title, ratings: ratings }
       end
@@ -111,9 +127,8 @@ module MoviesReport
       # fetch ratings from 1st result:
       def rating
         return '' unless @results.first
-        movie_details_doc = fetch_document(URI(@results.first[:url]))
-        el = movie_details_doc.css(".filmRating *[rel='v:rating']").first
-        el.content.strip.gsub(',', '.').to_f if el
+        # "7,1/10" => "7.1"
+        return @results.first[:rating].gsub(/\/.*/, '').gsub(',','.').to_f rescue ''
       end
 
       # @return [ [title, url], ... ]
@@ -122,13 +137,13 @@ module MoviesReport
         doc = fetch_document(uri)
 
         each_search_result(doc) do |el|
-          { title: el.content.strip, url: "http://#{uri.host}#{el.attr('href')}" }
+          { rating: el.content.strip }
         end
       end
 
       def each_search_result(document, &block)
         return unless document
-        document.css('.searchResult a.searchResultTitle').map do |el|
+        document.css(".resultsList .rateInfo strong").map do |el|
           yield(el)
         end
       end
