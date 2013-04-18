@@ -77,7 +77,7 @@ module MoviesReport
         title = movie[:title]
         ratings = build_rankings(title)
 
-        ap "=> #{title} (#{ratings}) #{movie[:size]}"
+        #ap "=> #{title} (#{ratings}) #{movie[:size]}"
 
         { title: title, ratings: ratings }
       end

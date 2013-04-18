@@ -8,7 +8,7 @@ require 'spec_helper'
 #
 describe MoviesReport do
   context 'run on chomikuj page' do
-    it "should find movies included in the page" do
+    it "should find movies included in the page", :req => 'MR-1' do
       site = 'chomikuj'
 
       VCR.use_cassette(site, :record => :new_episodes) do
