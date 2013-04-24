@@ -1,4 +1,5 @@
 require "movies_report/version"
+require "movies_report/html_page"
 require "movies_report/sanitizer/chomikuj"
 require 'nokogiri'
 require "net/http"
@@ -10,22 +11,6 @@ require "imdb"
 $MOVIES_REPORT_DEBUG = false
 
 module MoviesReport
-
-  # HtmlPage
-  # - fetches html page
-  # - uses Nokogiri, Net:HTTP
-  class HtmlPage
-    attr_reader :uri, :document
-
-    def initialize(uri)
-      @uri = uri
-      @document = Nokogiri::HTML(Net::HTTP.get_response(@uri).body)
-    rescue => e
-      ap "Cant fetch page from : '#{@uri}' #{e.message}"
-      ap e.backtrace
-      nil
-    end
-  end
 
   module Movie
 
