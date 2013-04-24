@@ -74,20 +74,24 @@ module MoviesReport
 
   # depends on:
   # - abstract data_source_engine, Movie::Chomikuj in particular (TODO)
+  # Report
+  # - takes concrete movies data source
+  # - for each movie from data source, create rankings
+  #
   class Report
 
-    def initialize(movies_url)
+    def initialize(movies_url, movies_source_engine)
       @movies_url = movies_url
       @movies_uri = URI(@movies_url)
       @movies_doc = HtmlPage.new(@movies_uri).document
-      @data_source_engine = Movie::Chomikuj
+      @movies_source_engine = movies_source_engine
     end
 
-    def run!
+    def build!
       # TODO: generic data_engine API:
       # @engine.new(movies_url).each_movie { |movie| .. }
       #
-      @data_source_engine.each_movie(@movies_doc) do |movie|
+      @movies_source_engine.each_movie(@movies_doc) do |movie|
         title = movie[:title]
         ratings = build_rankings(title)
 
@@ -170,7 +174,7 @@ module MoviesReport
     def self.parse_html(url=nil)
       raise 'No url given!' unless url
 
-      Report.new(url).run!
+      Report.new(url, Movie::Chomikuj).build!
     end
   end
 end
