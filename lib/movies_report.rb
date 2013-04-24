@@ -8,6 +8,8 @@ require "imdb"
 
 module MoviesReport
 
+  # depends on:
+  # - Nokogiri, Net:HTTP
   module FetchDocument
     def fetch_document(uri)
       Nokogiri::HTML(Net::HTTP.get_response(uri).body)
@@ -20,6 +22,8 @@ module MoviesReport
 
   module Movie
 
+    # depends on:
+    # - MoviesReport::Sanitizer::Chomikuj
     class Chomikuj
 
       class << self
@@ -65,6 +69,8 @@ module MoviesReport
     end
   end
 
+  # depends on:
+  # - abstract data_source_engine, Movie::Chomikuj in particular (TODO)
   class Report
     include FetchDocument
 
@@ -72,11 +78,14 @@ module MoviesReport
       @movies_url = movies_url
       @movies_uri = URI(@movies_url)
       @movies_doc = fetch_document(@movies_uri)
-      @engine     = Movie::Chomikuj # @todo: inject
+      @data_source_engine = Movie::Chomikuj
     end
 
     def run!
-      @engine.each_movie(@movies_doc) do |movie|
+      # TODO: generic data_engine API:
+      # @engine.new(movies_url).each_movie { |movie| .. }
+      #
+      @data_source_engine.each_movie(@movies_doc) do |movie|
         title = movie[:title]
         ratings = build_rankings(title)
 
@@ -97,7 +106,6 @@ module MoviesReport
   module Search
 
     class BaseSearch
-      include FetchDocument
 
       def initialize(title)
         @title = title
@@ -124,6 +132,7 @@ module MoviesReport
     end
 
     class Filmweb < BaseSearch
+      include FetchDocument
 
       SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
 
