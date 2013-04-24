@@ -20,6 +20,8 @@ module MoviesReport
     # - finds all movies information on given service page
     # - provides iterator, which yields all found movies with their page-specific properties
     #   (i.e. title + size + comment)
+
+    # TODO: make it Seach subclass
     class Chomikuj
 
       def initialize(uri)
