@@ -1,5 +1,6 @@
 require "movies_report/version"
 require "movies_report/html_page"
+require "movies_report/report"
 require "movies_report/sanitizer/chomikuj"
 require 'nokogiri'
 require "net/http"
@@ -62,34 +63,6 @@ module MoviesReport
         MoviesReport::Sanitizer::Chomikuj.clean(original_title)
       end
 
-    end
-  end
-
-  # Report:
-  # - takes movies data source class
-  # - for each movie from data source, create rankings
-  #
-  class Report
-
-    def initialize(movies_url, movies_source_engine)
-      @movies_uri    = URI(movies_url)
-      @movies_source = movies_source_engine.new(@movies_uri)
-    end
-
-    def build!
-      @movies_source.each_movie do |movie|
-        title    = movie[:title]
-        rankings = build_rankings(title)
-
-        ap "* #{title} [#{rankings.inspect}]" if $MOVIES_REPORT_DEBUG
-
-        { title: title, ratings: rankings }
-      end
-    end
-
-    def build_rankings(title)
-      { filmweb: Search::Filmweb.new(title).rating,
-        imdb:    Search::IMDB.new(title).rating }
     end
   end
 
@@ -178,7 +151,7 @@ module MoviesReport
     # bin/movies-report <URL>
     def self.run(url)
       $MOVIES_REPORT_DEBUG = true
-      MoviesReport::DSL.report_for(url)
+      DSL.report_for(url)
     end
   end
 end
