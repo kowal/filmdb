@@ -10,11 +10,14 @@ module MoviesReport
 
   # depends on:
   # - Nokogiri, Net:HTTP
-  module FetchDocument
-    def fetch_document(uri)
-      Nokogiri::HTML(Net::HTTP.get_response(uri).body)
+  class HtmlPage
+    attr_reader :uri, :document
+
+    def initialize(uri)
+      @uri = uri
+      @document = Nokogiri::HTML(Net::HTTP.get_response(@uri).body)
     rescue => e
-      ap "Cant fetch document from : '#{uri}' #{e.message}"
+      ap "Cant fetch page from : '#{@uri}' #{e.message}"
       ap e.backtrace
       nil
     end
@@ -72,12 +75,11 @@ module MoviesReport
   # depends on:
   # - abstract data_source_engine, Movie::Chomikuj in particular (TODO)
   class Report
-    include FetchDocument
 
     def initialize(movies_url)
       @movies_url = movies_url
       @movies_uri = URI(@movies_url)
-      @movies_doc = fetch_document(@movies_uri)
+      @movies_doc = HtmlPage.new(@movies_uri).document
       @data_source_engine = Movie::Chomikuj
     end
 
@@ -98,7 +100,7 @@ module MoviesReport
     def build_rankings(title)
       ratings = {}
       ratings[:filmweb] = Search::Filmweb.new(title).rating
-      ratings[:imdb] = Search::IMDB.new(title).rating
+      ratings[:imdb]    = Search::IMDB.new(title).rating
       ratings
     end
   end
@@ -132,7 +134,6 @@ module MoviesReport
     end
 
     class Filmweb < BaseSearch
-      include FetchDocument
 
       SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
 
@@ -149,7 +150,7 @@ module MoviesReport
 
       # @return [ [title, url], ... ]
       def read_results
-        doc = fetch_document(filmweb_search_url)
+        doc = HtmlPage.new(filmweb_search_url).document
 
         each_search_result(doc) do |el|
           { rating: el.content.strip }
