@@ -1,24 +1,10 @@
 # MoviesReport
 
-Simple tool for building movie report from multiple sources
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'movies_report'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install movies_report
+Simple tool for building movies report. Work in progress..
 
 ## Usage
 
-	report = MoviesReport::DSL.parse_html "http://chomikuj.pl/foo"
+	report = MoviesReport::DSL.report_for "http://chomikuj.pl/foo"
 
 	report.first # => { title: 'Foo', links: [..], ratings: [7.7, 8.2, 8.0] }
 
