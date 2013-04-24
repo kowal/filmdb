@@ -53,8 +53,11 @@ module MoviesReport
           page = pages[page_type]
 
           document.css(page[:selector]).map do |el|
-            # yield calculated field values: {:title=>"XXX", :size=>"xxx"}
-            yield(Hash[page[:fields].map { |field, value_proc | [field, value_proc.call(el) ]}])
+            # build properties structure: [ [ 'title', 'XXX' ], [ 'size', '200' ] ]
+            movie_properties = page[:fields].map { |field, value_proc| [field, value_proc.call(el) ]}
+
+            # yield properties as hashes: {:title => 'XXX', :size => '200'}
+            yield(Hash[movie_properties])
           end
         end
 
@@ -131,10 +134,13 @@ module MoviesReport
         return @results.first[:rating].gsub(/\/.*/, '').gsub(',','.').to_f rescue ''
       end
 
+      def filmweb_search_url
+        URI(SEARCH_MOVIE_URL % CGI::escape(@title))
+      end
+
       # @return [ [title, url], ... ]
       def read_results
-        uri = URI(SEARCH_MOVIE_URL % CGI::escape(@title))
-        doc = fetch_document(uri)
+        doc = fetch_document(filmweb_search_url)
 
         each_search_result(doc) do |el|
           { rating: el.content.strip }
