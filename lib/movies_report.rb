@@ -25,50 +25,54 @@ module MoviesReport
 
   module Movie
 
-    # depends on:
-    # - MoviesReport::Sanitizer::Chomikuj
+    # Movie::Chomikuj:
+    # - takes service specific uri
+    # - finds all movies information on given service page
+    # - provides iterator, which yields all found movies with their page-specific properties
+    #   (i.e. title + size + comment)
     class Chomikuj
 
-      class << self
+      def initialize(uri)
+        @document = HtmlPage.new(uri).document
+      end
 
-        def sanitize_title(original_title)
-          sanitized_title = MoviesReport::Sanitizer::Chomikuj.clean(original_title)
-          # ap "'#{original_title}' => '#{sanitized_title}'"
-          sanitized_title
-        end
+      def each_movie(&block)
+        return unless @document
 
-        def each_movie(document, &block)
-          return unless document
-
-          pages = { 
-            folder_list: {
-              selector: '#foldersList a',
-              fields: {
-                title: ->(el) { sanitize_title(el.content.strip) }
-              }
-            },
-            file_list: {
-              selector: '#FilesListContainer .fileItemContainer',
-              fields: {
-                title: ->(el) { sanitize_title(el.css('.filename').first.content.strip) },
-                size:  ->(el) { el.css('.fileinfo li:nth-last-child(2)').first.content }
-              }
+        pages = { 
+          folder_list: {
+            selector: '#foldersList a',
+            fields: {
+              title: ->(el) { sanitize_title(el.content.strip) }
+            }
+          },
+          file_list: {
+            selector: '#FilesListContainer .fileItemContainer',
+            fields: {
+              title: ->(el) { sanitize_title(el.css('.filename').first.content.strip) },
+              size:  ->(el) { el.css('.fileinfo li:nth-last-child(2)').first.content }
             }
           }
+        }
 
-          page_type = document.css('.noFile').empty? ? :file_list : :folder_list
-          page = pages[page_type]
+        page_type = @document.css('.noFile').empty? ? :file_list : :folder_list
+        page = pages[page_type]
 
-          document.css(page[:selector]).map do |el|
-            # build properties structure: [ [ 'title', 'XXX' ], [ 'size', '200' ] ]
-            movie_properties = page[:fields].map { |field, value_proc| [field, value_proc.call(el) ]}
+        @document.css(page[:selector]).map do |el|
+          # build properties structure: [ [ 'title', 'XXX' ], [ 'size', '200' ] ]
+          movie_properties = page[:fields].map { |field, value_proc| [field, value_proc.call(el) ]}
 
-            # yield properties as hashes: {:title => 'XXX', :size => '200'}
-            yield(Hash[movie_properties])
-          end
+          # yield properties as hashes: {:title => 'XXX', :size => '200'}
+          yield(Hash[movie_properties])
         end
-
       end
+
+      private
+
+      def sanitize_title(original_title)
+        MoviesReport::Sanitizer::Chomikuj.clean(original_title)
+      end
+
     end
   end
 
@@ -81,31 +85,21 @@ module MoviesReport
   class Report
 
     def initialize(movies_url, movies_source_engine)
-      @movies_url = movies_url
-      @movies_uri = URI(@movies_url)
-      @movies_doc = HtmlPage.new(@movies_uri).document
-      @movies_source_engine = movies_source_engine
+      @movies_uri    = URI(movies_url)
+      @movies_source = movies_source_engine.new(@movies_uri)
     end
 
     def build!
-      # TODO: generic data_engine API:
-      # @engine.new(movies_url).each_movie { |movie| .. }
-      #
-      @movies_source_engine.each_movie(@movies_doc) do |movie|
+      @movies_source.each_movie do |movie|
         title = movie[:title]
-        ratings = build_rankings(title)
 
-        #ap "=> #{title} (#{ratings}) #{movie[:size]}"
-
-        { title: title, ratings: ratings }
+        { title: title, ratings: build_rankings(title) }
       end
     end
 
     def build_rankings(title)
-      ratings = {}
-      ratings[:filmweb] = Search::Filmweb.new(title).rating
-      ratings[:imdb]    = Search::IMDB.new(title).rating
-      ratings
+      { filmweb: Search::Filmweb.new(title).rating,
+        imdb:    Search::IMDB.new(title).rating }
     end
   end
 
