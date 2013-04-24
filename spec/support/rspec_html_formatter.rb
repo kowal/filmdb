@@ -2,7 +2,7 @@ require "rspec/core/formatters/html_formatter"
 
 # Rspec HTML Formatter
 # Run it via:
-#    rspec --require ./spec/rspec_html_formatter.rb --format RspecHtmlFormatter spec/ > specs.html
+#    rspec --require ./spec/support/rspec_html_formatter.rb --format RspecHtmlFormatter spec/ > specs.html
 #
 
 class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
