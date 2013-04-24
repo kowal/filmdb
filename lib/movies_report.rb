@@ -8,8 +8,9 @@ require "imdb"
 
 module MoviesReport
 
-  # depends on:
-  # - Nokogiri, Net:HTTP
+  # HtmlPage
+  # - fetches html page
+  # - uses Nokogiri, Net:HTTP
   class HtmlPage
     attr_reader :uri, :document
 
@@ -76,10 +77,8 @@ module MoviesReport
     end
   end
 
-  # depends on:
-  # - abstract data_source_engine, Movie::Chomikuj in particular (TODO)
-  # Report
-  # - takes concrete movies data source
+  # Report:
+  # - takes movies data source class
   # - for each movie from data source, create rankings
   #
   class Report
@@ -105,11 +104,21 @@ module MoviesReport
 
   module Search
 
+    # Base class for all html-page based searchers
+    # - takes movie title to search for
+    # - searches immediately when instance is created
+    # - #read_results must be implemented in concrete classes
+    #
     class BaseSearch
 
       def initialize(title)
         @title = title
         @results = read_results
+      end
+
+      def read_results
+        raise NotImplementedError,
+              'This is an abstract base method. Implement in your subclass.'
       end
     end
 
