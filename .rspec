@@ -1,2 +1,4 @@
 --color
+--require ./spec/rspec_html_formatter.rb
+--format RspecHtmlFormatter --out specs.html
 --format progress
