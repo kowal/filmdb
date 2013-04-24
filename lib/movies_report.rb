@@ -6,6 +6,9 @@ require "uri"
 require "awesome_print"
 require "imdb"
 
+# TODO: use better config tool
+$MOVIES_REPORT_DEBUG = false
+
 module MoviesReport
 
   # HtmlPage
@@ -90,9 +93,12 @@ module MoviesReport
 
     def build!
       @movies_source.each_movie do |movie|
-        title = movie[:title]
+        title    = movie[:title]
+        rankings = build_rankings(title)
 
-        { title: title, ratings: build_rankings(title) }
+        ap "* #{title} [#{rankings.inspect}]" if $MOVIES_REPORT_DEBUG
+
+        { title: title, ratings: rankings }
       end
     end
 
@@ -178,6 +184,16 @@ module MoviesReport
       raise 'No url given!' unless url
 
       Report.new(url, Movie::Chomikuj).build!
+    end
+  end
+
+  class CLI
+
+    # Usage
+    # bin/movies-report <URL>
+    def self.run(url)
+      $MOVIES_REPORT_DEBUG = true
+      MoviesReport::DSL.report_for(url)
     end
   end
 end

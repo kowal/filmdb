@@ -10,4 +10,4 @@ $:.unshift File.expand_path("../../lib", bin_file)
 
 require 'movies_report'
 
-MoviesReport::DSL.parse_html(ARGV[0])
+MoviesReport::CLI.run ARGV[0]
