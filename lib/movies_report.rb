@@ -174,7 +174,7 @@ module MoviesReport
   end
 
   class DSL
-    def self.parse_html(url=nil)
+    def self.report_for(url=nil)
       raise 'No url given!' unless url
 
       Report.new(url, Movie::Chomikuj).build!
