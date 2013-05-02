@@ -4,11 +4,6 @@ require "uri"
 require "awesome_print"
 require "imdb"
 
-require "movies_report/version"
-require "movies_report/html_page"
-require "movies_report/report"
-require "movies_report/sanitizer/chomikuj"
-
 module MoviesReport
 
   class << self
@@ -18,6 +13,12 @@ module MoviesReport
       yield self
     end
   end
+
+  require "movies_report/version"
+  require "movies_report/html_page"
+  require "movies_report/report"
+
+  require "movies_report/sanitizer/chomikuj"
 
   module Movie
 
