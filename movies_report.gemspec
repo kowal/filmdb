@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$:.unshift lib unless $:.include?(lib)
+
 require 'movies_report/version'
 
 Gem::Specification.new do |gem|
@@ -17,9 +18,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "nokogiri"
-  gem.add_dependency "imdb"
-  gem.add_dependency "awesome_print"
+  gem.add_dependency "nokogiri", [">= 1.3.3"]
+  gem.add_dependency "imdb", [">= 0.6.8"]
+  gem.add_dependency "awesome_print", [">= 1.1.0"]
 
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "vcr"
