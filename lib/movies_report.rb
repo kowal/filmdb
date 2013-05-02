@@ -1,17 +1,23 @@
-require "movies_report/version"
-require "movies_report/html_page"
-require "movies_report/report"
-require "movies_report/sanitizer/chomikuj"
 require 'nokogiri'
 require "net/http"
 require "uri"
 require "awesome_print"
 require "imdb"
 
-# TODO: use better config tool
-$MOVIES_REPORT_DEBUG = false
+require "movies_report/version"
+require "movies_report/html_page"
+require "movies_report/report"
+require "movies_report/sanitizer/chomikuj"
 
 module MoviesReport
+
+  class << self
+    attr_accessor :debug
+
+    def configure
+      yield self
+    end
+  end
 
   module Movie
 
@@ -152,8 +158,12 @@ module MoviesReport
     # Usage
     # bin/movies-report <URL>
     def self.run(url)
-      $MOVIES_REPORT_DEBUG = true
+      MoviesReport.debug = true
       DSL.report_for(url)
     end
   end
+end
+
+MoviesReport.configure do |config|
+  config.debug = false
 end

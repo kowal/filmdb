@@ -14,7 +14,7 @@ class Report
       title    = movie[:title]
       rankings = build_rankings(title)
 
-      ap "* #{title} [#{rankings.inspect}]" if $MOVIES_REPORT_DEBUG
+      ap "* #{title} [#{rankings.inspect}]" if MoviesReport.debug
 
       { title: title, ratings: rankings }
     end
