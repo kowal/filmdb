@@ -9,8 +9,8 @@ module MoviesReport
       # fetch ratings from 1st result:
       def rating
         return '' unless @results.first
-        # "7,1/10" => "7.1"
-        return @results.first[:rating].gsub(/\/.*/, '').gsub(',','.').to_f rescue ''
+
+        format_rating(@results.first[:rating])
       end
 
       def filmweb_search_url
@@ -31,6 +31,13 @@ module MoviesReport
         document.css(".resultsList .rateInfo strong").map do |el|
           yield(el)
         end
+      end
+
+      private
+
+      # "7,1/10" => "7.1"
+      def format_rating(rating)
+        rating.gsub(/\/.*/, '').gsub(',','.').to_f rescue ''
       end
     end
 

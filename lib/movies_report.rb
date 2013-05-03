@@ -79,23 +79,8 @@ module MoviesReport
     end
   end
 
-  class DSL
-    def self.report_for(url=nil)
-      raise 'No url given!' unless url
-
-      Report.new(url, Movie::Chomikuj).build!
-    end
-  end
-
-  class CLI
-
-    # Usage
-    # bin/movies-report <URL>
-    def self.run(url)
-      MoviesReport.debug = true
-      DSL.report_for(url)
-    end
-  end
+  require "movies_report/dsl"
+  require "movies_report/cli"
 end
 
 MoviesReport.configure do |config|

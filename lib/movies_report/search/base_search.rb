@@ -5,9 +5,11 @@ module MoviesReport
     # Base class for all html-page based searchers
     # - takes movie title to search for
     # - searches immediately when instance is created
-    # - #read_results must be implemented in concrete classes
+    # - {read_results} must be implemented in concrete classes
     #
     class BaseSearch
+
+      attr_reader :title
 
       def initialize(title)
         @title = title
