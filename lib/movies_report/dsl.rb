@@ -3,7 +3,7 @@ module MoviesReport
     def self.report_for(url=nil)
       raise 'No url given!' unless url
 
-      Report.new(url, Movie::Chomikuj).build!
+      Report.new(url, Source::Chomikuj).build!
     end
 	end
 end
