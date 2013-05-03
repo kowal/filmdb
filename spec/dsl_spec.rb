@@ -13,10 +13,8 @@ describe MoviesReport::DSL do
     context 'run on chomikuj page' do
 
       it "should find all movies included in the page", :req => 'MR-1' do
-        site = 'chomikuj'
-
-        VCR.use_cassette(site, :record => :new_episodes) do
-          expected_movies = expected_results_for_site(site)
+        VCR.use_cassette('chomikuj', :record => :new_episodes) do
+          expected_movies = expected_results_for_site('chomikuj')
 
           report = MoviesReport::DSL.report_for "http://chomikuj.pl/mocked-page"
           actual_movies = report.map { |m| m[:title] }
