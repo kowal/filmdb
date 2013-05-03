@@ -18,8 +18,6 @@ module MoviesReport
   require "movies_report/html_page"
   require "movies_report/report"
 
-  require "movies_report/sanitizer/chomikuj"
-
   require "movies_report/search/base_search"
   require "movies_report/search/filmweb"
   require "movies_report/search/imdb"

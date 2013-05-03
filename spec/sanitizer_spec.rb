@@ -3,9 +3,9 @@
 require 'spec_helper'
 
 
-describe MoviesReport::Sanitizer::Chomikuj do
+describe MoviesReport::Source::ChomikujSanitizer do
 
-  subject(:sanitizer) { MoviesReport::Sanitizer::Chomikuj }
+  subject(:sanitizer) { MoviesReport::Source::ChomikujSanitizer }
 
   context 'with invalid input' do
 
