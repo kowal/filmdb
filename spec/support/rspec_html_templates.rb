@@ -7,8 +7,8 @@ REPORT_HEADER = <<-EOF
   </div>
 
   <div id="summary">
-    <p id="totals">&nbsp;</p>
-    <p id="duration">&nbsp;</p>
+    <p id="totals" class="alert alert-success"></p>
+    <div id="stats"></div>
   </div>
 </div>
 
