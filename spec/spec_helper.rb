@@ -10,6 +10,7 @@ require 'vcr'
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.order = 'random'
+  config.project_tracker_url = 'https://mkowalcze.kanbanery.com/projects/32672/board/tasks/%s'
 end
 
 VCR.configure do |config|
