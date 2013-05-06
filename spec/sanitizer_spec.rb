@@ -7,15 +7,15 @@ describe MoviesReport::Source::ChomikujSanitizer do
 
   subject(:sanitizer) { MoviesReport::Source::ChomikujSanitizer }
 
-  context '#clean' do
+  context '#clean', req: '959098' do
 
     context 'with invalid input' do
 
-      it 'requires  title', :req => [ 'SAN-0',  'OTHER-481' ] do
+      it 'requires  title', req: '959098' do
         expect { sanitizer.clean(nil) }.to raise_error ArgumentError
       end
 
-      it 'not fail on blank title', :req => %w{ SAN-0 } do
+      it 'not fail on blank title', req: '959098' do
         expect(sanitizer.clean('')).to eq('')
       end
 
@@ -26,7 +26,7 @@ describe MoviesReport::Source::ChomikujSanitizer do
       # This spec is using chomikuj.yml fixture to verify common cases.
       # Note: This example is required for good refactor later on.
       # 
-      it "clear titles as expected", req: 'SAN-1' do
+      it "clear titles as expected" do
 
         expected_titles = YAML::load(File.open("fixtures/sanitizer/chomikuj.yml"))
 

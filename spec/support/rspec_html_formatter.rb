@@ -17,6 +17,11 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
     ensure_valid_config!
   end
 
+  def start(example_count)
+    @output.puts HTML_HEADER
+    @output.puts REPORT_HEADER
+  end
+
   def req_url(req_no)
     @project_tracker_url % req_no
   end
@@ -47,7 +52,6 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
       <dd class="example passed">
        <span class="passed_spec_name">#{example.description}</span>
        #{requirements_links(example)}
-       <span class="duration">#{formatted_run_time(example)}s</span>
       </dd>
     HTML
   end
@@ -59,7 +63,7 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
   def ensure_valid_config!
     unless @project_tracker_url
       puts 'Please set up :project_tracker_url in your rspec config!'
-      # exit
+      exit
     end
   end
 end
