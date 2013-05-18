@@ -27,18 +27,17 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
   end
 
   def example_passed(example)
-    @printer.move_progress(percent_done)
     @output.puts(html_for_example(example))
     @printer.flush
   end
 
   def dump_summary(duration, example_count, failure_count, pending_count)
-    insert_html 'totals', "Sumary. Example_count : #{example_count}"
-    percent = {
-      success: (example_count - failure_count - pending_count) / example_count * 100,
-      pending: (pending_count / example_count * 100),
-      failure: (failure_count / example_count * 100)
-    }
+    insert_html '#totals', "Sumary. Example_count : #{example_count}"
+    # percent = {
+    #   success: (example_count - failure_count - pending_count) / example_count * 100,
+    #   pending: (pending_count / example_count * 100),
+    #   failure: (failure_count / example_count * 100)
+    # }
     # insert_html 'stats', <<-HTML
     #   <div class='progress'>
     #     <div class='bar bar-success' style='width: #{percent[:success]}%;'></div>
@@ -61,7 +60,7 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
   end
 
   def insert_html(selector, content)
-    @output.puts "<script type=\"text/javascript\">document.getElementById('#{selector}').innerHTML = \"#{content}\";</script>"
+    @output.puts "<script type=\"text/javascript\">$('#{selector}').html(\"#{content}\");</script>"
   end
 
   private
