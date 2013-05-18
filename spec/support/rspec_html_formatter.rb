@@ -55,7 +55,8 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
     unless example_group_number == 1
       @printer.print_example_group_end
     end
-    @printer.print_example_group_start( example_group_number, example_group.description, example_group.parent_groups.size )
+    @printer.print_example_group_start(example_group_number, example_group.description, example_group.parent_groups.size)
+    @output.puts "<div class='indent level#{example_group.parent_groups.size}'></div>"
     @printer.flush
   end
 
