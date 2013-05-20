@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://google.pl/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 301
+      message: Moved Permanently
+    headers:
+      Location:
+      - http://www.google.pl/
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Mon, 20 May 2013 20:27:44 GMT
+      Expires:
+      - Wed, 19 Jun 2013 20:27:44 GMT
+      Cache-Control:
+      - public, max-age=2592000
+      Server:
+      - gws
+      Content-Length:
+      - '218'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: US-ASCII
+      string: ! "<HTML><HEAD><meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n<TITLE>301
+        Moved</TITLE></HEAD><BODY>\n<H1>301 Moved</H1>\nThe document has moved\n<A
+        HREF=\"http://www.google.pl/\">here</A>.\r\n</BODY></HTML>\r\n"
+    http_version: 
+  recorded_at: Mon, 20 May 2013 20:27:43 GMT
+recorded_with: VCR 2.4.0
