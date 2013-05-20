@@ -70,7 +70,9 @@ module MoviesReport
       def self.clean(str)
         raise ArgumentError.new('String to sanitize not given!') if str.nil?
 
-        str.gsub(/#{TO_REMOVE.join('|')}/, '').strip.gsub(/[-\s\.]+$/, '').gsub(/\(.*\d+.*\).*/, '').strip
+        str.gsub(/#{TO_REMOVE.join('|')}/, '')
+          .gsub(/[-\s\.]+$|\(.*\d+.*\).*/, '')
+          .strip
       end
     end
 
