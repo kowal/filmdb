@@ -11,13 +11,27 @@ module MoviesReport
     class Chomikuj
 
       def initialize(uri)
-        @document = HtmlPage.new(uri).document
+        @document  = HtmlPage.new(uri).document
+        @page_type = @document.css('.noFile').empty? ? :file_list : :folder_list
+        @page      = predefined_page_info(@page_type)
       end
 
       def each_movie(&block)
         return unless @document
 
-        pages = { 
+        @document.css(@page[:selector]).map do |el|
+          # build properties structure: [ [ 'title', 'XXX' ], [ 'size', '200' ] ]
+          movie_properties = @page[:fields].map { |field, value_proc| [field, value_proc.call(el) ]}
+
+          # yield properties as hashes: {:title => 'XXX', :size => '200'}
+          yield(Hash[movie_properties])
+        end
+      end
+
+      private
+
+      def predefined_page_info(page_name)
+        {
           folder_list: {
             selector: '#foldersList a',
             fields: {
@@ -31,21 +45,8 @@ module MoviesReport
               size:  ->(el) { el.css('.fileinfo li:nth-last-child(2)').first.content }
             }
           }
-        }
-
-        page_type = @document.css('.noFile').empty? ? :file_list : :folder_list
-        page = pages[page_type]
-
-        @document.css(page[:selector]).map do |el|
-          # build properties structure: [ [ 'title', 'XXX' ], [ 'size', '200' ] ]
-          movie_properties = page[:fields].map { |field, value_proc| [field, value_proc.call(el) ]}
-
-          # yield properties as hashes: {:title => 'XXX', :size => '200'}
-          yield(Hash[movie_properties])
-        end
+        }[page_name]
       end
-
-      private
 
       def sanitize_title(original_title)
         ChomikujSanitizer.clean(original_title)
