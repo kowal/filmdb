@@ -1,26 +1,24 @@
-REPORT_HEADER = <<-EOF
+# coding: utf-8
+
+REPORT_HEADER = <<-HTML
 <div class="rspec-report container">
-
-<div id="rspec-header">
-  <div id="label">
-    <h1>Specification</h1>
+  <div id="rspec-header">
+    <div id="label">
+      <h1>Specification</h1>
+    </div>
+    <div id="summary">
+      <p id="totals" class="alert alert-success"></p>
+      <div id="stats"></div>
+    </div>
   </div>
-
-  <div id="summary">
-    <p id="totals" class="alert alert-success"></p>
-    <div id="stats"></div>
-  </div>
-</div>
-
-
 <div class="results">
-EOF
+HTML
 
 GLOBAL_SCRIPTS = <<-EOF
 
 EOF
 
-GLOBAL_STYLES = <<-EOF
+GLOBAL_STYLES = <<-CSS
 
 #rspec-header {
   height: 4em;
@@ -169,9 +167,9 @@ a {
   color: #000000;
   background-color: #FFFBD3;
 }
-EOF
+CSS
 
-HTML_HEADER = <<-EOF
+HTML_HEADER = <<-HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -182,15 +180,7 @@ HTML_HEADER = <<-EOF
   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
   <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
-  <script>
-    $(function() {
-      //// hide all none-root elements
-      // _.each(_.filter($('.example_group'), function(e) {
-      //  return $(e).find('.indent.level1').length == 0;
-      //}), function(e) { $(e).hide(); } )
-    });
-  </script>
   <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
 </head>
 <body>
-EOF
+HTML

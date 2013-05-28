@@ -8,10 +8,12 @@ describe MoviesReport::Report do
   class FakeSearchEngine
     attr_accessor :movies
     def initialize(url); end
-    def each_movie; movies.each { |m| yield(m) } ; end
+    def each_movie
+      movies.each { |m| yield(m) }
+    end
   end
 
-  let(:movies_url) { "http://does.not.matter.com" }
+  let(:movies_url) { 'http://does.not.matter.com' }
   let(:search_engine_klass) { FakeSearchEngine }
 
   context 'on build' do

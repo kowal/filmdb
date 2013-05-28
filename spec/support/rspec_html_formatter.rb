@@ -1,8 +1,11 @@
-require "rspec/core/formatters/html_formatter"
+# coding: utf-8
+
+require 'rspec/core/formatters/html_formatter'
 
 # Rspec HTML Formatter
 # Run it via:
-#    rspec --require ./spec/support/rspec_html_formatter.rb --format RspecHtmlFormatter spec/ > specs.html
+#    rspec --require ./spec/support/rspec_html_formatter.rb
+#          --format RspecHtmlFormatter spec/ > specs.html
 #
 RSpec.configure do |c|
   c.add_setting :project_tracker_url
@@ -33,18 +36,7 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
 
   def dump_summary(duration, example_count, failure_count, pending_count)
     insert_html '#totals', "Sumary. Example_count : #{example_count}"
-    # percent = {
-    #   success: (example_count - failure_count - pending_count) / example_count * 100,
-    #   pending: (pending_count / example_count * 100),
-    #   failure: (failure_count / example_count * 100)
-    # }
-    # insert_html 'stats', <<-HTML
-    #   <div class='progress'>
-    #     <div class='bar bar-success' style='width: #{percent[:success]}%;'></div>
-    #     <div class='bar bar-warning' style='width: #{percent[:pending]}%;'></div>
-    #     <div class='bar bar-danger'  style='width: #{percent[:failure]}%;'></div>
-    #   </div>
-    # HTML
+
     @printer.flush
   end
 
@@ -52,7 +44,7 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
     @example_group_red = false
     @example_group_number += 1
 
-    unless example_group_number == 1
+    if example_group_number != 1
       @printer.print_example_group_end
     end
     @printer.print_example_group_start(example_group_number, example_group.description, example_group.parent_groups.size)

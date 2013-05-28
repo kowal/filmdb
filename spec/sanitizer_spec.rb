@@ -2,7 +2,6 @@
 
 require 'spec_helper'
 
-
 describe MoviesReport::Source::ChomikujSanitizer do
 
   subject(:sanitizer) { MoviesReport::Source::ChomikujSanitizer }
@@ -23,13 +22,14 @@ describe MoviesReport::Source::ChomikujSanitizer do
 
     context 'with real examples' do
 
+      let(:expected_titles) do
+        YAML.load(File.open('fixtures/sanitizer/chomikuj.yml'))
+      end
+
       # This spec is using chomikuj.yml fixture to verify common cases.
       # Note: This example is required for good refactor later on.
-      # 
-      it "clear titles as expected" do
-
-        expected_titles = YAML::load(File.open("fixtures/sanitizer/chomikuj.yml"))
-
+      #
+      it 'clear titles as expected' do
         expected_titles.each do |title|
           original_title = title['in']
           expected_title = title['out']
