@@ -1,3 +1,5 @@
+# coding: utf-8
+
 module MoviesReport
 
   module Search
@@ -6,7 +8,7 @@ module MoviesReport
     #
     class Filmweb < BaseSearch
 
-      SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"
+      SEARCH_MOVIE_URL = 'http://www.filmweb.pl/search?q=%s'
 
       # fetch ratings from 1st result:
       def rating
@@ -16,7 +18,7 @@ module MoviesReport
       end
 
       def filmweb_search_url
-        URI(SEARCH_MOVIE_URL % CGI::escape(@title))
+        URI(SEARCH_MOVIE_URL % CGI.escape(@title))
       end
 
       # @return [ [title, url], ... ]
@@ -30,7 +32,7 @@ module MoviesReport
 
       def each_search_result(document, &block)
         return unless document
-        document.css(".resultsList .rateInfo strong").map do |el|
+        document.css('.resultsList .rateInfo strong').map do |el|
           yield(el)
         end
       end
@@ -39,7 +41,7 @@ module MoviesReport
 
       # "7,1/10" => "7.1"
       def format_rating(rating)
-        rating.gsub(/\/.*/, '').gsub(',','.').to_f rescue ''
+        rating.gsub(/\/.*/, '').gsub(',', '.').to_f rescue ''
       end
     end
 

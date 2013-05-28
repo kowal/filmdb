@@ -1,4 +1,6 @@
-module MoviesReport  
+# coding: utf-8
+
+module MoviesReport
   class CLI
     # Usage
     # bin/movies-report <URL>
