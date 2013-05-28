@@ -19,7 +19,7 @@ module MoviesReport
       def each_movie(&block)
         return unless @document
 
-        @document.css(@page[:selector]).map do |el|
+        @document.css(@page[:selector]).each do |el|
           # build properties structure: [ [ 'title', 'XXX' ], [ 'size', '200' ] ]
           movie_properties = @page[:fields].map { |field, value_proc| [field, value_proc.call(el) ]}
 
