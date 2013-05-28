@@ -2,6 +2,8 @@ module MoviesReport
 
   module Search
 
+    # Represents movie search in Filmweb service
+    #
     class Filmweb < BaseSearch
 
       SEARCH_MOVIE_URL = "http://www.filmweb.pl/search?q=%s"

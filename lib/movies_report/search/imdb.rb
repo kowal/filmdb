@@ -2,7 +2,8 @@ module MoviesReport
 
   module Search
 
-    # use the gem
+    # Represents movie search in IMDB service
+    #
     class IMDB < BaseSearch
 
       def rating
