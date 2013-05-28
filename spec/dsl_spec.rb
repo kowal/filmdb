@@ -12,7 +12,7 @@ describe MoviesReport::DSL do
 
     context 'run on chomikuj page' do
 
-      it "should find all movies included in the page", :req => '958909' do
+      it 'finds all movies included in the page', :req => '958909' do
 
         VCR.use_cassette('chomikuj', :record => :new_episodes) do
           expected_movies = expected_results_for_site('chomikuj')
