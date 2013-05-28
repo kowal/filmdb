@@ -16,9 +16,9 @@ describe MoviesReport::Report do
 
   context 'on build' do
 
-    it 'returns title and rankings for each movie' do
-      report = MoviesReport::Report.new(movies_url, search_engine_klass)
+    subject(:report) { MoviesReport::Report.new(movies_url, search_engine_klass) }
 
+    it 'returns title and rankings for each movie' do
       report.expects(:filmweb_rating).with('MovieA').returns('5.0')
       report.expects(:filmweb_rating).with('MovieB').returns('6.0')
       report.expects(:imdb_rating).with('MovieA').returns('7.0')
@@ -32,7 +32,13 @@ describe MoviesReport::Report do
       expect(report.build!).to eq([
         { title: 'MovieA', ratings: { filmweb: '5.0', imdb: '7.0' } },
         { title: 'MovieB', ratings: { filmweb: '6.0', imdb: '8.0' } }
-      ]), 'Report should include proper ratings'
+      ]), 'Report results should include proper ratings'
+    end
+
+    it 'returns empty results when no movies are found' do
+      FakeSearchEngine.any_instance.stubs(:movies).returns([])
+
+      expect(report.build!).to be_empty
     end
   end
 end
