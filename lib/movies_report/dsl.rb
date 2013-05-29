@@ -2,10 +2,12 @@
 
 module MoviesReport
   class DSL
-    def self.report_for(url = nil)
+    def self.report_for(url = nil, options = {})
       raise 'No url given!' unless url
 
-      Report.new(url, Source::Chomikuj).build!
+      report = Report.new(url, Source::Chomikuj)
+
+      report.build!
     end
   end
 end

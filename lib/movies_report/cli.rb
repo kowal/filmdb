@@ -6,7 +6,8 @@ module MoviesReport
     # bin/movies-report <URL>
     def self.run(url)
       MoviesReport.debug = true
-      DSL.report_for(url)
+
+      DSL.report_for(url, { workers: 4 })
     end
   end
 end

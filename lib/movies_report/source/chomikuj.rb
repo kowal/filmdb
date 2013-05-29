@@ -20,12 +20,16 @@ module MoviesReport
       # For each movie found - yields movie attributes:
       #    {:title => 'XXX', :size => '200'}
       #
-      def each_movie(&block)
+      def all_movies
         return unless @document
 
         @document.css(@page.selector).map do |element|
-          yield(@page.fields(element))
+          @page.fields(element)
         end
+      end
+
+      def each_movie(&block)
+        all_movies.map { |m| yield(m) }
       end
 
       private

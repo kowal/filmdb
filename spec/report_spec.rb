@@ -6,11 +6,7 @@ describe MoviesReport::Report do
 
   # dumb search engine impl.
   class FakeSearchEngine
-    attr_accessor :movies
-    def initialize(url); end
-    def each_movie
-      movies.each { |m| yield(m) }
-    end
+    def initialize(url) end
   end
 
   let(:movies_url) { 'http://does.not.matter.com' }
@@ -26,7 +22,7 @@ describe MoviesReport::Report do
       report.expects(:imdb_rating).with('MovieA').returns('7.0')
       report.expects(:imdb_rating).with('MovieB').returns('8.0')
 
-      FakeSearchEngine.any_instance.stubs(:movies).returns([
+      FakeSearchEngine.any_instance.stubs(:all_movies).returns([
         { title: 'MovieA' },
         { title: 'MovieB' }
       ])
@@ -38,7 +34,7 @@ describe MoviesReport::Report do
     end
 
     it 'returns empty results when no movies are found' do
-      FakeSearchEngine.any_instance.stubs(:movies).returns([])
+      FakeSearchEngine.any_instance.stubs(:all_movies).returns([])
 
       expect(report.build!).to be_empty
     end

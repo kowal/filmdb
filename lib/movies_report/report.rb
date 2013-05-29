@@ -15,7 +15,8 @@ module MoviesReport
 
     def build!
       movies_info = []
-      @movies_source.each_movie do |movie|
+      movies = @movies_source.all_movies
+      movies.each do |movie|
         title    = movie[:title]
         rankings = build_rankings(title)
 
