@@ -8,17 +8,11 @@ module MoviesReport
     #
     class Filmweb < BaseSearch
 
-      SEARCH_MOVIE_URL = 'http://www.filmweb.pl/search?q=%s'
-
       # fetch ratings from 1st result:
       def rating
         return '' unless @results.first
 
         format_rating(@results.first[:rating])
-      end
-
-      def filmweb_search_url
-        URI(SEARCH_MOVIE_URL % CGI.escape(@title))
       end
 
       # @return [ [title, url], ... ]
@@ -38,6 +32,12 @@ module MoviesReport
       end
 
       private
+
+      SEARCH_MOVIE_URL = 'http://www.filmweb.pl/search?q=%s'
+
+      def filmweb_search_url
+        URI(SEARCH_MOVIE_URL % CGI.escape(@title))
+      end
 
       # "7,1/10" => "7.1"
       def format_rating(rating)
