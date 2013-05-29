@@ -14,66 +14,69 @@ module MoviesReport
 
       def initialize(uri)
         @document  = HtmlPage.new(uri).document
-        @page_type = get_page_type
-        @page      = predefined_page_info(@page_type)
+        @page      = create_page
       end
 
+      # For each movie found - yields movie attributes:
+      #    {:title => 'XXX', :size => '200'}
+      #
       def each_movie(&block)
         return unless @document
 
-        @document.css(@page[:selector]).each do |el|
-          # build properties structure:
-          #    [ [ 'title', 'XXX' ], [ 'size', '200' ] ]
-          movie_properties = @page[:fields].map do |field, value_proc|
-            [field, value_proc.call(el)]
-          end
-
-          # yield properties as hashes:
-          #    {:title => 'XXX', :size => '200'}
-          yield(Hash[movie_properties])
+        @document.css(@page.selector).map do |element|
+          yield(@page.fields(element))
         end
       end
 
       private
 
-      def get_page_type
-        @document.css('.noFile').empty? ? :file_list : :folder_list
+      def create_page
+        if @document.css('.noFile').empty?
+          FileListPage.new
+        else
+          FolderListPage.new
+        end
       end
 
-      def predefined_page_info(page_name)
-        {
-          folder_list: folder_list_info,
-          file_list: file_list_info
-        }[page_name]
-      end
+    end
 
-      def folder_list_info
-        {
-          selector: '#foldersList a',
-          fields: {
-            title: ->(el) { sanitize_title(el.content.strip) }
-          }
-        }
-      end
-
-      def file_list_info
-        {
-          selector: '#FilesListContainer .fileItemContainer',
-          fields: {
-            title: ->(el) { sanitize_title(find_first(el, '.filename').strip) },
-            size:  ->(el) { find_first(el, '.fileinfo li:nth-last-child(2)') }
-          }
-        }
-      end
+    module ChomikujPage
 
       def sanitize_title(original_title)
         ChomikujSanitizer.clean(original_title)
       end
 
       def find_first(element, selector)
-        element.css(selector).first.content
+        element.css(selector).first.content.strip
       end
 
+    end
+
+    class FolderListPage
+      include ChomikujPage
+
+      def selector
+        '#foldersList a'
+      end
+
+      def fields(element)
+        { title: sanitize_title(element.content.strip) }
+      end
+    end
+
+    class FileListPage
+      include ChomikujPage
+
+      def selector
+        '#FilesListContainer .fileItemContainer'
+      end
+
+      def fields(element)
+        {
+          title: sanitize_title(find_first(element, '.filename').strip),
+          size:  find_first(element, '.fileinfo li:nth-last-child(2)')
+        }
+      end
     end
 
     class ChomikujSanitizer
