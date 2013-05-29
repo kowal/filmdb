@@ -23,7 +23,7 @@ describe MoviesReport::HtmlPage do
   private
 
   def with_expected_http_response &block
-    VCR.use_cassette('google', :record => :new_episodes) do
+    VCR.use_cassette('google', record: :new_episodes) do
       expected_response_body = expected_results_for_site('google')[0]
       yield(expected_response_body)
     end
