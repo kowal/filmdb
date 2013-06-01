@@ -20,6 +20,7 @@ module MoviesReport
   require 'movies_report/report'
 
   require 'movies_report/dsl'
+  require 'movies_report/console_reporter'
   require 'movies_report/cli'
 end
 

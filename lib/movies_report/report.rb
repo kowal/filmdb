@@ -15,20 +15,15 @@ module MoviesReport
 
     def build!
       movies_info = []
-      movies = @movies_source.all_movies
-      movies.each do |movie|
-        title    = movie[:title]
-        rankings = build_rankings(title)
-
-        ap "* #{title} [#{rankings.inspect}]" if MoviesReport.debug
-
-        movies_info << { title: title, ratings: rankings }
+      @movies_source.all_movies.map do |movie|
+        { title:   movie[:title],
+          ratings: build_rankings(movie[:title]) }
       end
-      movies_info
     end
 
     def build_rankings(title)
-      { filmweb: filmweb_rating(title), imdb: imdb_rating(title) }
+      { filmweb: filmweb_rating(title),
+        imdb:    imdb_rating(title) }
     end
 
     private
