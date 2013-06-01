@@ -1,3 +1,7 @@
+# coding: utf-8
+
+require 'terminal-table'
+
 module MoviesReport
 
   class ConsoleReporter
@@ -6,25 +10,26 @@ module MoviesReport
     end
 
     def display
-      display_header
 
-      @movies_report.each do |movie|
-        display_movie_stats(movie) if movie_has_stats?(movie)
+      rows = @movies_report.map do |movie|
+        display_movie_stats(movie)
       end
+
+      table = Terminal::Table.new title:    "Movies stats",
+                                  headings: movies_stats_header,
+                                  rows:     rows
+
+      puts table
     end
 
-    def display_header
-      printf "%-60s %s %s\n", 'Title', 'Filmweb', 'Imdb'
+    def movies_stats_header
+      %w{ Title Filmweb Imdb }
     end
 
     def display_movie_stats(movie)
-      printf "* %-60s %s     %s\n", movie[:title], ranking_color(movie[:ratings][:filmweb]), ranking_color(movie[:ratings][:imdb])
-    end
-
-    def movie_has_stats?(movie)
-      [movie[:ratings][:filmweb], movie[:ratings][:imdb]].any? do |r|
-        !r.nil? && !r.to_s.empty?
-      end
+      [ movie[:title],
+        ranking_color(movie[:ratings][:filmweb] || '-'),
+        ranking_color(movie[:ratings][:imdb] || '-') ]
     end
 
     private

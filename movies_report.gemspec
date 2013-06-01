@@ -21,6 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "nokogiri", [">= 1.3.3"]
   gem.add_dependency "imdb", [">= 0.6.8"]
   gem.add_dependency "awesome_print", [">= 1.1.0"]
+  gem.add_dependency "terminal-table"
 
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "guard-rspec"

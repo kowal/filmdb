@@ -10,7 +10,7 @@ module MoviesReport
 
       # fetch ratings from 1st result:
       def rating
-        return '' unless @results.first
+        return nil unless @results.first
 
         format_rating(@results.first[:rating])
       end
