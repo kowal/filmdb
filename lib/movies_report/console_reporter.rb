@@ -36,16 +36,16 @@ module MoviesReport
 
     def movie_ratings_columns(ratings)
       ratings.map do |service, rating|
-        if invalid_rating?(rating)
-          table_cell('-')
-        else
+        if valid_rating?(rating)
           table_cell(ranking_color(rating))
+        else
+          table_cell('-')
         end
       end
     end
 
-    def invalid_rating?(rating)
-      !rating || !rating.respond_to?(:to_f) || rating.empty?
+    def valid_rating?(rating)
+      Float(rating) rescue false
     end
 
     def table_cell(value)
