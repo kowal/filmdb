@@ -2,11 +2,13 @@
 
 Simple tool for building movies report. Work in progress..
 
-## Usage
-
-	report = MoviesReport::DSL.report_for "http://chomikuj.pl/foo"
-
-	report.first # => { title: 'Foo', links: [..], ratings: [7.7, 8.2, 8.0] }
+## API
+	report = Report.new("http://chomikuj.pl/user/folder", Source::Chomikuj)
+	report.build!
+	# => [
+	#      { title: 'MovieA', ratings: { filmweb: '5.0', imdb: '7.0' } },
+	#      { title: 'MovieB', ratings: { filmweb: '6.0', imdb: '8.0' } }
+	#    ]
 
 ## Contributing
 
