@@ -22,6 +22,7 @@ module MoviesReport
   require 'movies_report/dsl'
   require 'movies_report/console_reporter'
   require 'movies_report/cli'
+  require 'movies_report/command_line_options'
 end
 
 MoviesReport.configure do |config|

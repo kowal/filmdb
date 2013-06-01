@@ -2,7 +2,7 @@
 # encoding: UTF-8
 
 # resolve bin path, ignoring symlinks
-require "pathname"
+require 'pathname'
 bin_file = Pathname.new(__FILE__).realpath
 
 # add self to libpath
@@ -10,4 +10,4 @@ $:.unshift File.expand_path("../../lib", bin_file)
 
 require 'movies_report'
 
-MoviesReport::CLI.run ARGV[0]
+MoviesReport::CLI.start(ARGV)
