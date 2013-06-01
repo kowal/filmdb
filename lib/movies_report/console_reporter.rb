@@ -45,7 +45,7 @@ module MoviesReport
     end
 
     def invalid_rating?(rating)
-      !rating || rating.empty? || !rating.respond_to?(:to_f)
+      !rating || !rating.respond_to?(:to_f) || rating.empty?
     end
 
     def table_cell(value)
