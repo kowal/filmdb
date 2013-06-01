@@ -5,21 +5,22 @@ require 'terminal-table'
 module MoviesReport
 
   class ConsoleReporter
-    def initialize(movies_report)
+    def initialize(movies_report, options={})
+      @colorize = options.fetch(:colorize) { true }
+
       @movies_report = movies_report
     end
 
     def display
+      puts table_structure
+    end
 
-      rows = @movies_report.map do |movie|
-        display_movie_stats(movie)
-      end
+    def table_structure
+      rows = @movies_report.map { |movie| display_movie_stats(movie) }
 
-      table = Terminal::Table.new title:    "Movies stats",
-                                  headings: movies_stats_header,
-                                  rows:     rows
-
-      puts table
+      Terminal::Table.new title:    "Movies stats",
+                          headings: movies_stats_header,
+                          rows:     rows
     end
 
     def movies_stats_header
@@ -27,14 +28,35 @@ module MoviesReport
     end
 
     def display_movie_stats(movie)
-      [ movie[:title],
-        ranking_color(movie[:ratings][:filmweb] || '-'),
-        ranking_color(movie[:ratings][:imdb] || '-') ]
+      [
+        movie[:title],
+        movie_ratings_columns(movie[:ratings])
+      ].flatten
+    end
+
+    def movie_ratings_columns(ratings)
+      ratings.map do |service, rating|
+        if invalid_rating?(rating)
+          table_cell('-')
+        else
+          table_cell(ranking_color(rating))
+        end
+      end
+    end
+
+    def invalid_rating?(rating)
+      !rating || rating.empty? || !rating.respond_to?(:to_f)
+    end
+
+    def table_cell(value)
+      { value: value, alignment: :center }
     end
 
     private
 
     def ranking_color(ranking)
+      return ranking unless @colorize
+
       if ranking.to_f > 7.5
         colorize(32, ranking)
       elsif ranking.to_f > 6.0
