@@ -83,6 +83,7 @@ module MoviesReport
       end
     end
 
+    # TODO: rename (and move from here) to MovieTitleSanitizer
     class ChomikujSanitizer
 
       TO_REMOVE = %w{
