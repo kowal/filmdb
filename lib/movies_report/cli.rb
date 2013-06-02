@@ -2,6 +2,8 @@
 
 module MoviesReport
 
+  # Command Line i-face for MoviesReport
+  #
   class CLI
 
     def self.start(argv)

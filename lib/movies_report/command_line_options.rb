@@ -13,7 +13,8 @@ module MoviesReport
       opt_parser = OptionParser.new do |opts|
         opts.banner = "Usage: movies-report [options] source_url"
 
-        opts.on('-s', '--source SOURCE_URL', 'Source of movies to check') do |source_url|
+        opts.on('-s', '--source SOURCE_URL',
+                'Source of movies to check') do |source_url|
           options.source_url = source_url
         end
       end

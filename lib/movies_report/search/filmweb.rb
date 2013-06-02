@@ -22,7 +22,9 @@ module MoviesReport
 
       # "7,1/10" => "7.1"
       def format_rating(rating)
-        rating.gsub(/\/.*/, '').gsub(',', '.').to_f rescue ''
+        Float(rating.gsub(/\/.*/, '').gsub(',', '.'))
+      rescue ArgumentError
+        nil
       end
     end
 
