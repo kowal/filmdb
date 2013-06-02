@@ -12,14 +12,14 @@ module MoviesReport
 
         def find(title)
           document = html_document_for(title)
-          ap "document #{document.class.name}"
+          movie_rating = ''
 
           if document
             result = search_results(document)[0]
-            ap "result #{result}"
-
-            { rating: result ? result.content.strip : '' }
+            movie_rating = result.content.strip if result
           end
+
+          { rating: movie_rating }
         end
 
         def search_results(document)
@@ -29,11 +29,10 @@ module MoviesReport
         private
 
         def html_document_for(title)
-          ap "find #{filmweb_search_url(title)}"
           HtmlPage.new(filmweb_search_url(title)).document
         end
 
-        SEARCH_MOVIE_URL = 'http://www.filmweb.pl/search?q=%s'
+        SEARCH_MOVIE_URL   = 'http://www.filmweb.pl/search?q=%s'
 
         RATE_INFO_SELECTOR = '.resultsList .rateInfo strong'
 
