@@ -2,43 +2,33 @@
 
 require 'spec_helper'
 
-describe MoviesReport::Source::ChomikujSanitizer do
+describe MoviesReport::Search::Filmweb do
 
-  subject(:sanitizer) { MoviesReport::Source::ChomikujSanitizer }
+  let(:fake_service) { mock() }
+  let(:movie_title) { 'Some Good Movie' }
 
-  context '#clean', req: '959098' do
+  let(:filmweb_search) { MoviesReport::Search::Filmweb.new(movie_title, fake_service) }
 
-    context 'with invalid input' do
+  context '#rating' do
 
-      it 'requires  title', req: '959098' do
-        expect { sanitizer.clean(nil) }.to raise_error ArgumentError
-      end
+    it 'returns float for x,x/y format' do
+      fake_service.expects(:find).with(movie_title).returns({ rating: '7,1/10' })
 
-      it 'not fail on blank title', req: '959098' do
-        expect(sanitizer.clean('')).to eq('')
-      end
-
+      expect(filmweb_search.rating).to eq(7.1)
     end
 
-    context 'with real examples' do
+    it 'returns float for x,x format' do
+      fake_service.expects(:find).with(movie_title).returns({ rating: '7,1' })
 
-      let(:expected_titles) do
-        YAML.load(File.open('fixtures/sanitizer/chomikuj.yml'))
-      end
+      expect(filmweb_search.rating).to eq(7.1)
+    end
 
-      # This spec is using chomikuj.yml fixture to verify common cases.
-      # Note: This example is required for good refactor later on.
-      #
-      it 'clear titles as expected' do
-        expected_titles.each do |title|
-          original_title = title['in']
-          expected_title = title['out']
+    it 'returns float for x.x format' do
+      fake_service.expects(:find).with(movie_title).returns({ rating: '7.1' })
 
-          expect(sanitizer.clean(original_title)).to eq(expected_title)
-        end
-      end
-
+      expect(filmweb_search.rating).to eq(7.1)
     end
 
   end
+
 end
