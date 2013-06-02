@@ -6,7 +6,12 @@ module MoviesReport
 
     # Represents movie search in IMDB service
     #
-    class IMDB < BaseSearch
+    class IMDB
+
+      def initialize(title)
+        @title = title
+        @results = read_results
+      end
 
       def rating
         movie = @results.first

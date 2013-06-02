@@ -6,7 +6,12 @@ module MoviesReport
 
     # Represents movie search in Filmweb service
     #
-    class Filmweb < BaseSearch
+    class Filmweb
+
+      def initialize(title)
+        @title = title
+        @results = read_results
+      end
 
       # fetch ratings from 1st result:
       def rating

@@ -12,7 +12,6 @@ module MoviesReport
   require 'movies_report/config'
 
   require 'movies_report/html_page'
-  require 'movies_report/search/base_search'
   require 'movies_report/search/filmweb'
   require 'movies_report/search/imdb'
   require 'movies_report/source/chomikuj'
