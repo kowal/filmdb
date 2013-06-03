@@ -15,10 +15,15 @@ module MoviesReport
 
     def build!
       movies_info = []
-      @movies_source.all_movies.map do |movie|
+
+      movies_collection.map do |movie|
         { title:   movie[:title],
           ratings: build_rankings(movie[:title]) }
       end
+    end
+
+    def movies_collection
+      @movies_source.all_movies.uniq { |movie| movie[:title] }
     end
 
     def build_rankings(title)

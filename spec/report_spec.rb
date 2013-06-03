@@ -24,7 +24,8 @@ describe MoviesReport::Report do
 
       FakeSearchEngine.any_instance.stubs(:all_movies).returns([
         { title: 'MovieA' },
-        { title: 'MovieB' }
+        { title: 'MovieB' },
+        { title: 'MovieB' } # doubled titles should be ignored
       ])
 
       expect(report.build!).to eq([
