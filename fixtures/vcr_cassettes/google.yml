@@ -36,9 +36,7 @@ http_interactions:
       - SAMEORIGIN
     body:
       encoding: US-ASCII
-      string: ! "<HTML><HEAD><meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n<TITLE>301
-        Moved</TITLE></HEAD><BODY>\n<H1>301 Moved</H1>\nThe document has moved\n<A
-        HREF=\"http://www.google.pl/\">here</A>.\r\n</BODY></HTML>\r\n"
+      string: "<html><head></head><body>MockedPageContent</body></html>"
     http_version: 
   recorded_at: Mon, 20 May 2013 20:27:43 GMT
 recorded_with: VCR 2.4.0

@@ -10,7 +10,7 @@ module MoviesReport
     attr_reader :uri, :document
 
     def initialize(uri)
-      @uri = URI(uri)
+      @uri = uri.respond_to?(:host) ? uri : URI(URI.encode(uri))
       @document = Nokogiri::HTML(Net::HTTP.get_response(@uri).body)
     rescue => e
       ap "Cant fetch page from : '#{@uri}' #{e.message}"
