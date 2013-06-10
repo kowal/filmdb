@@ -1,5 +1,7 @@
 # MoviesReport
 
+[![Dependency Status](https://gemnasium.com/kowal/movies_report.png)](https://gemnasium.com/kowal/movies_report)
+
 Simple tool for building movies report. Work in progress..
 
 ## API
