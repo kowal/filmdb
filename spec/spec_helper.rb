@@ -1,7 +1,12 @@
 # coding: utf-8
 
-require 'simplecov'
-SimpleCov.start
+if ENV['TRAVIS'] == 'true'
+  require 'coveralls'
+  Coveralls.wear!
+else
+  require 'simplecov'
+  SimpleCov.start
+end
 
 require 'movies_report'
 require 'vcr'
