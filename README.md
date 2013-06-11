@@ -1,7 +1,8 @@
-# MoviesReport
+# Movies Report
 
 [![Build Status](https://api.travis-ci.org/kowal/movies_report.png)](https://travis-ci.org/kowal/movies_report)
 [![Dependency Status](https://gemnasium.com/kowal/movies_report.png)](https://gemnasium.com/kowal/movies_report)
+[![Coverage Status](https://coveralls.io/repos/kowal/movies_report/badge.png?branch=master)](https://coveralls.io/r/kowal/movies_report?branch=master)
 [![Code Climate](https://codeclimate.com/github/kowal/movies_report.png)](https://codeclimate.com/github/kowal/movies_report)
 
 Simple tool for building movies report. Work in progress..
