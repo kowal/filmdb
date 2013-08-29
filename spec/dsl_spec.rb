@@ -17,7 +17,7 @@ describe MoviesReport::DSL do
         VCR.use_cassette('chomikuj', record: :new_episodes) do
           expected_movies = expected_results_for_site('chomikuj')
 
-          report = MoviesReport::DSL.report_for 'http://chomikuj.pl/mocked-page'
+          report = MoviesReport::DSL.report_for url: 'http://chomikuj.pl/mocked-page'
           actual_movies = report.map { |m| m[:title] }
 
           expect(actual_movies).to include(*expected_movies)

@@ -14,7 +14,9 @@ describe MoviesReport::Report do
 
   context 'on build' do
 
-    subject(:report) { MoviesReport::Report.new(movies_url, search_engine_klass) }
+    subject(:report) {
+      MoviesReport::Report.new url: movies_url, engine: search_engine_klass
+    }
 
     it 'returns title and rankings for each movie' do
       report.expects(:filmweb_rating).with('MovieA').returns('5.0')

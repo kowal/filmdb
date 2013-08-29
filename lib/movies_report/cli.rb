@@ -8,24 +8,26 @@ module MoviesReport
 
     def self.start(argv)
       options = parse_options(argv)
-      self.run(options)
+      self.run(options.marshal_dump)
     end
 
     def self.parse_options(argv)
       MoviesReport::CommandLineOptions.parse(argv)
     end
 
-    # Usage
-    # bin/movies-report <URL>
-    def self.run(options)
+    def self.run(report_options={})
       MoviesReport.debug = true
 
       # this can take some time..
       ap "Generating movies stats. Please wait..."
-      movies_report = DSL.report_for(options.source_url)
+      movies_report = DSL.report_for(report_options)
 
-      # display report
-      ConsoleReporter.new(movies_report).display
+      if report_options[:background]
+        # TODO
+      else
+        # display report
+        ConsoleReporter.new(movies_report).display
+      end
     end
   end
 end

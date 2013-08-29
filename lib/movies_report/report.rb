@@ -8,15 +8,18 @@ module MoviesReport
   #
   class Report
 
-    def initialize(movies_url, movies_source_engine)
+    def initialize(report_options={})
+      movies_url    = report_options.fetch(:url) { raise "url not given!" }
+      source_engine = report_options.fetch(:engine) { "engine not given!" }
+
       @movies_uri    = URI(movies_url)
-      @movies_source = movies_source_engine.new(@movies_uri)
+      @movies_source = source_engine.new(@movies_uri)
     end
 
     def build!
       movies_info = []
-
-      movies_collection.map do |movie|
+      _movies = movies_collection
+      _movies.map do |movie|
         { title:   movie[:title],
           ratings: build_rankings(movie[:title]) }
       end

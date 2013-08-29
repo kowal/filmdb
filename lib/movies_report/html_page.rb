@@ -1,5 +1,10 @@
 # coding: utf-8
 
+require 'nokogiri'
+require 'awesome_print'
+require 'net/http'
+require 'uri'
+
 module MoviesReport
 
   # HtmlPage
