@@ -11,6 +11,7 @@ module MoviesReport
     def initialize(report_options={})
       movies_url    = report_options.fetch(:url) { raise "url not given!" }
       source_engine = report_options.fetch(:engine) { "engine not given!" }
+      @work_in_background = report_options.fetch(:background) { false }
 
       @movies_uri    = URI(movies_url)
       @movies_source = source_engine.new(@movies_uri)
@@ -30,8 +31,12 @@ module MoviesReport
     end
 
     def build_rankings(title)
-      { filmweb: filmweb_rating(title),
-        imdb:    imdb_rating(title) }
+      if @work_in_background
+        { filmweb_job: MoviesReport::FilmwebWorker.perform_async(title) }
+      else
+        { filmweb: filmweb_rating(title),
+          imdb:    imdb_rating(title) }
+      end
     end
 
     private

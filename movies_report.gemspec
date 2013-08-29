@@ -22,6 +22,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "imdb", [">= 0.6.8"]
   gem.add_dependency "awesome_print", [">= 1.1.0"]
   gem.add_dependency "terminal-table"
+  gem.add_dependency "sidekiq"
+  gem.add_dependency "sidekiq-status"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
@@ -33,4 +35,9 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "vcr"
   gem.add_development_dependency "webmock", ["= 1.9.3"]
   gem.add_development_dependency "syntax"
+  gem.add_development_dependency "rack"
+  gem.add_development_dependency "sinatra"
+  gem.add_development_dependency "slim"
+  gem.add_development_dependency "yard"
+  gem.add_development_dependency "redcarpet"
 end

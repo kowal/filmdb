@@ -1,5 +1,7 @@
 # coding: utf-8
 
+require 'movies_report/search/filmweb_service'
+
 module MoviesReport
 
   module Search

@@ -1,10 +1,21 @@
 # coding: utf-8
 
-require 'nokogiri'
-require 'net/http'
-require 'uri'
 require 'awesome_print'
 require 'imdb'
+require 'sidekiq'
+require 'sidekiq-status'
+
+Sidekiq.configure_client do |config|
+  config.client_middleware do |chain|
+    chain.add Sidekiq::Status::ClientMiddleware
+  end
+end
+
+Sidekiq.configure_server do |config|
+  config.server_middleware do |chain|
+    chain.add Sidekiq::Status::ServerMiddleware, expiration: 30.minutes
+  end
+end
 
 module MoviesReport
 
@@ -17,6 +28,8 @@ module MoviesReport
   require 'movies_report/search/filmweb'
   require 'movies_report/search/imdb'
   require 'movies_report/source/chomikuj'
+
+  require 'movies_report/workers/filmweb_worker'
 
   require 'movies_report/report'
 

@@ -17,6 +17,14 @@ module MoviesReport
           options.url = url
         end
 
+        opts.on('-b', '--background BACKGROUND', 'Run in background') do
+          options.background = true
+        end
+
+        opts.on('-j', '--job JOB_ID', 'Read Status of job') do |job_id|
+          options.job_id = job_id
+        end
+
       end
 
       opt_parser.parse!(args)

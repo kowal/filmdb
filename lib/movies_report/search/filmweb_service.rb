@@ -1,5 +1,8 @@
 # coding: utf-8
 
+require 'uri'
+require 'movies_report/html_page'
+
 module MoviesReport
 
   module Search
