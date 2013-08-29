@@ -8,6 +8,8 @@
 Simple tool for building movies report. Work in progress..
 
 ## API
+
+  # Blocking:
 	report = Report.new("http://chomikuj.pl/user/folder", Source::Chomikuj)
 	report.build!
 	# => [
@@ -15,10 +17,32 @@ Simple tool for building movies report. Work in progress..
 	#      { title: 'MovieB', ratings: { filmweb: '6.0', imdb: '8.0' } }
 	#    ]
 
-## Contributing
+  # Async (TODO)
+  Report.new("http://chomikuj.pl/user/folder",
+             Source::Chomikuj,
+             background: true).build!
+  # => JID-40bccfaa8ddfb861777f697a
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+## CLI
+
+### Run
+
+  bin/movies-report --url 'http://chomikuj.pl/user/folder'
+  "Generating movies stats. Please wait..."
+
+  # after couple of minutes you'll see:
+  #
+  +----------------------------+---------+------+
+  |                Movies stats                 |
+  +----------------------------+---------+------+
+  | Title                      | Filmweb | Imdb |
+  +----------------------------+---------+------+
+  | Bezpieczna Przystań        |   7.4   |  -   |
+  | Last Minute                |   5.2   | 1.3  |
+  | Don't Cry                  |    -    |  -   |
+  | O Czym Wiedziała Maisie    |    -    |  -   |
+  | Jednostka - Entity         |    -    | 0.0  |
+  | Baadshah                   |   7.4   | 6.1  |
+  | Rapture Palooza            |   4.8   | 5.1  |
+  | ...
+
