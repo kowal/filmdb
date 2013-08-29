@@ -10,6 +10,7 @@ Simple tool for building movies report. Work in progress..
 ## API
 
   # Blocking:
+  
 	report = Report.new("http://chomikuj.pl/user/folder", Source::Chomikuj)
 	report.build!
 	# => [
@@ -18,31 +19,30 @@ Simple tool for building movies report. Work in progress..
 	#    ]
 
   # Async (TODO)
-  Report.new("http://chomikuj.pl/user/folder",
-             Source::Chomikuj,
-             background: true).build!
-  # => JID-40bccfaa8ddfb861777f697a
+
+    Report.new("http://chomikuj.pl/user/folder", Source::Chomikuj, background: true).build!
+    # => JID-40bccfaa8ddfb861777f697a
 
 ## CLI
 
 ### Run
 
-  bin/movies-report --url 'http://chomikuj.pl/user/folder'
-  "Generating movies stats. Please wait..."
+    bin/movies-report --url 'http://chomikuj.pl/user/folder'
+    "Generating movies stats. Please wait..."
 
-  # after couple of minutes you'll see:
-  #
-  +----------------------------+---------+------+
-  |                Movies stats                 |
-  +----------------------------+---------+------+
-  | Title                      | Filmweb | Imdb |
-  +----------------------------+---------+------+
-  | Bezpieczna Przystań        |   7.4   |  -   |
-  | Last Minute                |   5.2   | 1.3  |
-  | Don't Cry                  |    -    |  -   |
-  | O Czym Wiedziała Maisie    |    -    |  -   |
-  | Jednostka - Entity         |    -    | 0.0  |
-  | Baadshah                   |   7.4   | 6.1  |
-  | Rapture Palooza            |   4.8   | 5.1  |
-  | ...
+    # after couple of minutes you'll see:
+    #
+    +----------------------------+---------+------+
+    |                Movies stats                 |
+    +----------------------------+---------+------+
+    | Title                      | Filmweb | Imdb |
+    +----------------------------+---------+------+
+    | Bezpieczna Przystań        |   7.4   |  -   |
+    | Last Minute                |   5.2   | 1.3  |
+    | Don't Cry                  |    -    |  -   |
+    | O Czym Wiedziała Maisie    |    -    |  -   |
+    | Jednostka - Entity         |    -    | 0.0  |
+    | Baadshah                   |   7.4   | 6.1  |
+    | Rapture Palooza            |   4.8   | 5.1  |
+    | ...
 
