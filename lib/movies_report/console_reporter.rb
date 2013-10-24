@@ -57,9 +57,9 @@ module MoviesReport
     def ranking_color(ranking)
       return ranking unless @colorize
 
-      if ranking.to_f > 7.5
+      if ranking.to_f > 7.7
         colorize(32, ranking)
-      elsif ranking.to_f > 6.0
+      elsif ranking.to_f > 6.7
         colorize(33, ranking)
       else
         colorize(37, ranking)

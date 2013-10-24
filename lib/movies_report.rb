@@ -30,8 +30,7 @@ module MoviesReport
   require 'movies_report/source/chomikuj'
 
   require 'movies_report/report'
-  require 'movies_report/workers/filmweb_worker'
-  require 'movies_report/workers/imdb_worker'
+  require 'movies_report/workers/web_search_worker'
 
   require 'movies_report/dsl'
   require 'movies_report/console_reporter'

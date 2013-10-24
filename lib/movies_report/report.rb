@@ -46,7 +46,7 @@ module MoviesReport
 
     def filmweb_rating(title)
       if @work_in_background
-        MoviesReport::FilmwebWorker.perform_async(title)
+        MoviesReport::WebSearchWorker.perform_async(title, :filmweb)
       else
         get_rating { MoviesReport::Search::Filmweb.new(title).rating }
       end
@@ -54,7 +54,7 @@ module MoviesReport
 
     def imdb_rating(title)
       if @work_in_background
-        MoviesReport::ImdbWorker.perform_async(title)
+        MoviesReport::WebSearchWorker.perform_async(title, :imdb)
       else
         get_rating { MoviesReport::Search::IMDB.new(title).rating }
       end
