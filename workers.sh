@@ -1,1 +1,1 @@
-bundle exec sidekiq -r ./lib/movies_report/workers/filmweb_worker.rb
+bundle exec sidekiq -v -r ./lib/movies_report/workers/workers.rb

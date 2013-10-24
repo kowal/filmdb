@@ -29,12 +29,13 @@ module MoviesReport
   require 'movies_report/search/imdb'
   require 'movies_report/source/chomikuj'
 
-  require 'movies_report/workers/filmweb_worker'
-
   require 'movies_report/report'
+  require 'movies_report/workers/filmweb_worker'
+  require 'movies_report/workers/imdb_worker'
 
   require 'movies_report/dsl'
   require 'movies_report/console_reporter'
+  require 'movies_report/background_reporter'
   require 'movies_report/cli'
   require 'movies_report/command_line_options'
 end
