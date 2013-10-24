@@ -5,10 +5,10 @@ require 'terminal-table'
 module MoviesReport
 
   class ConsoleReporter
-    def initialize(movies_report, options={})
+    def initialize(movies_stats, options={})
       @colorize = options.fetch(:colorize) { true }
 
-      @movies_report = movies_report
+      @movies_stats = movies_stats
     end
 
     def display
@@ -16,7 +16,7 @@ module MoviesReport
     end
 
     def table_structure
-      rows = @movies_report.map { |movie| display_movie_stats(movie) }
+      rows = @movies_stats.map { |movie| display_movie_stats(movie) }
 
       Terminal::Table.new title:    "Movies stats",
                           headings: movies_stats_header,
