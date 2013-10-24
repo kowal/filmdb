@@ -21,8 +21,7 @@ module MoviesReport
       def read_results
         Imdb::Search.new(@title).movies
       rescue => e
-        ap "Can fetch IMDB results for #{@title}"
-        ap e.message
+        $stderr.puts "I Can't fetch IMDB results for #{@title}. Reason: #{e.message}"
         []
       end
 

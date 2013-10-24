@@ -14,11 +14,11 @@ module MoviesReport
     def perform(title)
       return if retrieve(:rating)
 
-      ap "FilmwebWorker#perform(#{title})"
+      ap "[FilmwebWorker] '#{title}'"
       search_result = MoviesReport::Search::Filmweb.new(title)
 
       store rating: search_result.rating
-      ap "FilmwebWorker#perform Stored rating '#{search_result.rating}' for '#{title}'"
+      ap "[FilmwebWorker] Stored rating '#{search_result.rating}' for '#{title}'"
     end
 
   end

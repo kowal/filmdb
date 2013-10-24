@@ -5,9 +5,12 @@ module MoviesReport
   class DSL
 
     def self.report_for(report_options={})
-      opts = report_options.merge engine: Source::Chomikuj
+      report = Report.new(report_options.merge(default_options))
+      report.build!
+    end
 
-      Report.new(opts).build!
+    def self.default_options
+      { engine: Source::Chomikuj }
     end
 
   end

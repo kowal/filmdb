@@ -19,7 +19,7 @@ module MoviesReport
       MoviesReport.debug = true
 
       # this can take some time..
-      ap "Generating movies stats. Please wait..."
+      ap "Movies Report started."
       movies_report = DSL.report_for(report_options)
 
       if report_options[:background]

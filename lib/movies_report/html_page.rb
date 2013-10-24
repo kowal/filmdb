@@ -18,8 +18,8 @@ module MoviesReport
       @uri = uri.respond_to?(:host) ? uri : URI(URI.encode(uri))
       @document = Nokogiri::HTML(Net::HTTP.get_response(@uri).body)
     rescue => e
-      ap "Cant fetch page from : '#{@uri}' #{e.message}"
-      ap e.backtrace
+      $stderr.puts "Cant fetch page from : '#{@uri}' #{e.message}"
+      $stderr.puts e.backtrace
       nil
     end
   end

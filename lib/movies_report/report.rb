@@ -20,6 +20,7 @@ module MoviesReport
     def build!
       movies_info = []
       _movies = movies_collection
+      ap "Building report for #{_movies.size} movies. This can take some time ..."
       _movies.map do |movie|
         { title:   movie[:title],
           ratings: build_rankings(movie[:title]) }
@@ -42,12 +43,21 @@ module MoviesReport
     private
 
     def filmweb_rating(title)
-      MoviesReport::Search::Filmweb.new(title).rating
+      get_rating { MoviesReport::Search::Filmweb.new(title).rating }
     end
 
     def imdb_rating(title)
-      MoviesReport::Search::IMDB.new(title).rating
+      get_rating { MoviesReport::Search::IMDB.new(title).rating }
     end
+
+    def get_rating(&block)
+      unless @work_in_background
+        print('.')
+        $stdout.flush
+      end
+      block.call
+    end
+
   end
 
 end
