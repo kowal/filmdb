@@ -18,6 +18,10 @@ describe MoviesReport::Report do
       MoviesReport::Report.new url: movies_url, engine: search_engine_klass
     }
 
+    it 'returns empty collection by default' do
+      expect(report.data).to eq([])
+    end
+
     it 'returns title and rankings for each movie' do
       report.expects(:filmweb_rating).with('MovieA').returns('5.0')
       report.expects(:filmweb_rating).with('MovieB').returns('6.0')
@@ -30,7 +34,8 @@ describe MoviesReport::Report do
         { title: 'MovieB' } # doubled titles should be ignored
       ])
 
-      expect(report.build!).to eq([
+      report.build!
+      expect(report.data).to eq([
         { title: 'MovieA', ratings: { filmweb: '5.0', imdb: '7.0' } },
         { title: 'MovieB', ratings: { filmweb: '6.0', imdb: '8.0' } }
       ]), 'Report results should include proper ratings'
@@ -39,7 +44,8 @@ describe MoviesReport::Report do
     it 'returns empty results when no movies are found' do
       FakeSearchEngine.any_instance.stubs(:all_movies).returns([])
 
-      expect(report.build!).to be_empty
+      report.build!
+      expect(report.data).to be_empty
     end
   end
 end

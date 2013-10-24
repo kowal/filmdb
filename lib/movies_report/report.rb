@@ -8,6 +8,8 @@ module MoviesReport
   #
   class Report
 
+    attr_reader :data
+
     def initialize(report_options={})
       movies_url    = report_options.fetch(:url) { raise "url not given!" }
       source_engine = report_options.fetch(:engine) { "engine not given!" }
@@ -15,13 +17,13 @@ module MoviesReport
 
       @movies_uri    = URI(movies_url)
       @movies_source = source_engine.new(@movies_uri)
+      @data = []
     end
 
     def build!
-      movies_info = []
       _movies = movies_collection
       ap "Building report for #{_movies.size} movies. This can take some time ..."
-      _movies.map do |movie|
+      @data = _movies.map do |movie|
         { title:   movie[:title],
           ratings: build_rankings(movie[:title]) }
       end
@@ -32,29 +34,35 @@ module MoviesReport
     end
 
     def build_rankings(title)
-      if @work_in_background
-        { filmweb_job: MoviesReport::FilmwebWorker.perform_async(title) }
-      else
-        { filmweb: filmweb_rating(title),
-          imdb:    imdb_rating(title) }
-      end
+      { filmweb: filmweb_rating(title),
+        imdb:    imdb_rating(title) }
+    end
+
+    def read_rankings
+      MoviesReport::FilmwebWorker.find_job(job_id)
     end
 
     private
 
     def filmweb_rating(title)
-      get_rating { MoviesReport::Search::Filmweb.new(title).rating }
+      if @work_in_background
+        MoviesReport::FilmwebWorker.perform_async(title)
+      else
+        get_rating { MoviesReport::Search::Filmweb.new(title).rating }
+      end
     end
 
     def imdb_rating(title)
-      get_rating { MoviesReport::Search::IMDB.new(title).rating }
+      if @work_in_background
+        MoviesReport::ImdbWorker.perform_async(title)
+      else
+        get_rating { MoviesReport::Search::IMDB.new(title).rating }
+      end
     end
 
     def get_rating(&block)
-      unless @work_in_background
-        print('.')
-        $stdout.flush
-      end
+      print '.'
+      $stdout.flush
       block.call
     end
 

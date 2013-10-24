@@ -23,12 +23,10 @@ module MoviesReport
       movies_report = DSL.report_for(report_options)
 
       if report_options[:background]
-        ap "Now you have to pool workers about the results..."
-        ap movies_report
-        ap 'By!'
+        BackgroundReporter.new(movies_report).run
       else
         # display report
-        ConsoleReporter.new(movies_report).display
+        ConsoleReporter.new(movies_report.data).display
       end
     end
   end

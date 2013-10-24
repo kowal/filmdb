@@ -18,7 +18,7 @@ describe MoviesReport::DSL do
           expected_movies = expected_results_for_site('chomikuj')
 
           report = MoviesReport::DSL.report_for url: 'http://chomikuj.pl/mocked-page'
-          actual_movies = report.map { |m| m[:title] }
+          actual_movies = report.data.map { |m| m[:title] }
 
           expect(actual_movies).to include(*expected_movies)
         end

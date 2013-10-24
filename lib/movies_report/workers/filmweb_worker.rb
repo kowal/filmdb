@@ -21,5 +21,9 @@ module MoviesReport
       ap "[FilmwebWorker] Stored rating '#{search_result.rating}' for '#{title}'"
     end
 
+    # def self.find_job(job_id)
+    #   Sidekiq::Status::get_all job_id
+    # end
+
   end
 end
