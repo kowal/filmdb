@@ -28,3 +28,5 @@ end
 def expected_results_for_site(site)
   YAML::load(File.open("fixtures/expected/#{site}.yml"))
 end
+
+MoviesReport.debug = false
