@@ -56,4 +56,22 @@ describe MoviesReport::Report do
       FakeSearchEngine.any_instance.stubs(:all_movies).returns(data)
     end
   end
+
+  context 'run on real page' do
+
+    it 'finds all movies included in the page', req: '958909' do
+
+      VCR.use_cassette('chomikuj', record: :new_episodes) do
+        expected_movies = expected_results_for_site('chomikuj')
+
+        report = MoviesReport::Report.new url: 'http://chomikuj.pl/mocked-page', engine: MoviesReport::Source::Chomikuj
+        report.build!
+        actual_movies = report.data.map { |m| m[:title] }
+
+        expect(actual_movies).to include(*expected_movies)
+      end
+    end
+
+  end
+
 end

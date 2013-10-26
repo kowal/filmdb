@@ -24,13 +24,11 @@ module MoviesReport
       ap "[WebSearchWorker] '#{title}'"
       search_result = SERVICES[service.to_sym].new(title)
 
+      store title: title
       store rating: search_result.rating
       ap "[WebSearchWorker] Stored rating '#{search_result.rating}' for '#{title}'"
+      nil
     end
-
-    # def self.find_job(job_id)
-    #   Sidekiq::Status::get_all job_id
-    # end
 
   end
 end

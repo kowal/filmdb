@@ -42,6 +42,10 @@ module MoviesReport
       MoviesReport::FilmwebWorker.find_job(job_id)
     end
 
+    def all_ratings
+      @data.map { |movie| movie[:ratings].values }.flatten
+    end
+
     private
 
     def filmweb_rating(title)
