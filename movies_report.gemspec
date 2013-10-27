@@ -25,6 +25,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "redis"
   gem.add_dependency "sidekiq"
   gem.add_dependency "sidekiq-status"
+  gem.add_dependency "ruby-progressbar"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"

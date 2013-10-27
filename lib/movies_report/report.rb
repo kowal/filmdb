@@ -46,6 +46,10 @@ module MoviesReport
       @data.map { |movie| movie[:ratings].values }.flatten
     end
 
+    def workers_ids
+      all_ratings
+    end
+
     private
 
     def filmweb_rating(title)

@@ -20,18 +20,24 @@ module MoviesReport
     STORAGE = Redis.new
     class << self
 
-      def find(job_id)
-        workers_ids = JSON.parse(STORAGE.get(job_id.to_s))
+      def find(job_id, opts={})
+        workers_ids = opts.fetch(:workers_ids) { JSON.parse(STORAGE.get(job_id.to_s)) }
+
         results = {}
+        stats = { started: 0, finished: 0 }
         workers_ids.each do |worker_id|
           data = Sidekiq::Status::get_all worker_id
-          status = Sidekiq::Status::status(worker_id)
+
+          return {} unless data['state']
+
+          stats[data['state'].to_sym] += 1
+
           results[data['title']] ||= []
           if data['rating'] && data['rating'] != '' && data['rating'] != '0.0'
             results[data['title']] << Float(data['rating'])
           end
         end
-        hash_results = {}
+        hash_results = { status: stats }
         results.map do |title, ratings|
           hash_results[title] = ratings.compact.inject{ |sum, el| sum + el }.to_f / ratings.size
         end

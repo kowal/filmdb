@@ -13,6 +13,8 @@ module MoviesReport
     include Sidekiq::Worker
     include Sidekiq::Status::Worker
 
+    sidekiq_options 'retry' => 'false'
+
     SERVICES = {
       filmweb: MoviesReport::Search::Filmweb,
       imdb:    MoviesReport::Search::IMDB
@@ -21,13 +23,15 @@ module MoviesReport
     def perform(title, service)
       return if retrieve(:rating)
 
+      store state: 'started'
       ap "[WebSearchWorker] '#{title}'"
       search_result = SERVICES[service.to_sym].new(title)
 
       store title: title
       store rating: search_result.rating
+      store state: 'finished'
       ap "[WebSearchWorker] Stored rating '#{search_result.rating}' for '#{title}'"
-      nil
+      true
     end
 
   end

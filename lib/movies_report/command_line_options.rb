@@ -21,6 +21,10 @@ module MoviesReport
           options.background = true
         end
 
+        opts.on('-k', '--keep KEEP_CONNECTION', 'Keep connection until all job are finished') do
+          options.keep = true
+        end
+
         opts.on('-j', '--job JOB_ID', 'Read Status of job') do |job_id|
           options.job_id = job_id
         end
