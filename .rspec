@@ -4,3 +4,4 @@
 --require ./spec/spec_helper.rb
 --format RspecHtmlFormatter --out specs.html
 --format progress
+--order random

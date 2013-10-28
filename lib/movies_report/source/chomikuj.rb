@@ -13,7 +13,6 @@ module MoviesReport
     class Chomikuj
 
       def initialize(uri)
-        ap "Fetching Chomikuj page - #{uri} ..."
         @document  = HtmlPage.new(uri).document
         @page      = create_page
       end

@@ -24,32 +24,40 @@ module MoviesReport
     end
 
     def movies_stats_header
-      %w{ Title Filmweb Imdb }
+      %w{ Title Filmweb Imdb Avg }
     end
 
     def display_movie_stats(movie)
       [
         movie[:title],
-        movie_ratings_columns(movie[:ratings])
+        movie_ratings_columns(movie[:ratings]),
+        average_rating(movie[:ratings])
       ].flatten
     end
 
     def movie_ratings_columns(ratings)
       ratings.map do |service, rating|
-        if valid_rating?(rating)
-          table_cell(ranking_color(rating))
-        else
-          table_cell('-')
-        end
+        rating_cell(rating)
       end
+    end
+
+    def average_rating(ratings)
+      avg = ratings.values.compact
+        .inject{ |sum, el| sum + el }.to_f / ratings.size
+      rating_cell(avg)
     end
 
     def valid_rating?(rating)
       Float(rating) rescue false
     end
 
-    def table_cell(value)
-      { value: value, alignment: :center }
+    def rating_cell(rating)
+      display_value = if valid_rating?(rating)
+        ranking_color(rating)
+      else
+        '-'
+      end
+      { value: display_value, alignment: :center }
     end
 
     private

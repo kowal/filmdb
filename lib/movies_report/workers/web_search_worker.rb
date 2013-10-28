@@ -24,13 +24,13 @@ module MoviesReport
       return if retrieve(:rating)
 
       store state: 'started'
-      ap "[WebSearchWorker] '#{title}'"
+      logger.debug { "[WebSearchWorker] '#{title}'" }
       search_result = SERVICES[service.to_sym].new(title)
 
       store title: title
       store rating: search_result.rating
       store state: 'finished'
-      ap "[WebSearchWorker] Stored rating '#{search_result.rating}' for '#{title}'"
+      logger.debug { "[WebSearchWorker] Stored rating '#{search_result.rating}' for '#{title}'" }
       true
     end
 

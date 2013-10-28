@@ -3,7 +3,8 @@
 module MoviesReport
 
   class << self
-    attr_accessor :debug, :workers
+
+    attr_accessor :logger
 
     def configure
       yield self

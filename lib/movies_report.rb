@@ -1,5 +1,6 @@
 # coding: utf-8
 
+require 'logger'
 require 'awesome_print'
 require 'imdb'
 require 'sidekiq'
@@ -40,5 +41,7 @@ module MoviesReport
 end
 
 MoviesReport.configure do |config|
-  config.debug = false
+  config.logger = Logger.new(STDOUT).tap do |log|
+    log.level = Logger::WARN
+  end
 end

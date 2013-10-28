@@ -22,8 +22,8 @@ describe MoviesReport::ConsoleReporter do
     end
 
     it 'has all required columns' do
-      # title + 2 ratings
-      expect(subject.table_structure).to have(3).columns
+      # title + 2 ratings + avg
+      expect(subject.table_structure).to have(4).columns
     end
 
     it 'does not change titles' do

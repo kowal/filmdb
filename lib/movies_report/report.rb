@@ -22,11 +22,11 @@ module MoviesReport
 
     def build!
       _movies = movies_collection
-      ap "Building report for #{_movies.size} movies. This can take some time ..."
       @data = _movies.map do |movie|
         { title:   movie[:title],
           ratings: build_rankings(movie[:title]) }
       end
+      @data
     end
 
     def movies_collection
