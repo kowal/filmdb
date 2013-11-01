@@ -1,8 +1,5 @@
 # coding: utf-8
 
-require 'redis'
-require "json"
-
 module MoviesReport
 
   # Stores Sidekiq workers IDs and reads their statuses

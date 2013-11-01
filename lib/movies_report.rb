@@ -6,6 +6,8 @@ require 'imdb'
 require 'sidekiq'
 require 'sidekiq-status'
 require 'ruby-progressbar'
+require 'redis'
+require "json"
 
 Sidekiq.configure_client do |config|
   config.client_middleware do |chain|

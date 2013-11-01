@@ -36,6 +36,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "coveralls"
   gem.add_development_dependency "vcr"
   gem.add_development_dependency "webmock", ["= 1.9.3"]
+  gem.add_development_dependency "fakeredis"
   gem.add_development_dependency "syntax"
   gem.add_development_dependency "rack"
   gem.add_development_dependency "sinatra"

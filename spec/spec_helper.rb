@@ -8,6 +8,7 @@ else
   SimpleCov.start
 end
 
+require 'fakeredis'
 require 'movies_report'
 require 'vcr'
 

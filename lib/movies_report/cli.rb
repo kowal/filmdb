@@ -115,8 +115,8 @@ module MoviesReport
     end
 
     def self.create_report report_options
+      MoviesReport.logger.info "Building report. Please wait.."
       MoviesReport::Report.new(report_options).tap do |movies_report|
-        MoviesReport.logger.info "Building report. Please wait.."
         movies_report.build!
       end
     end
