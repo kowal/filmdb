@@ -38,8 +38,10 @@ module MoviesReport
 
   require 'movies_report/console_reporter'
   require 'movies_report/background_job'
-  require 'movies_report/cli'
-  require 'movies_report/command_line_options'
+  
+  require 'movies_report/cli/options'
+  require 'movies_report/cli/progressbar'
+  require 'movies_report/cli/app'
 end
 
 MoviesReport.configure do |config|
