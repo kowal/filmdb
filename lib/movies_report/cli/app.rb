@@ -74,7 +74,7 @@ module MoviesReport
       end
 
       def self.report_in_console(movies_report)
-        ConsoleReporter.new(movies_report.data).display
+        TableReporter.new(movies_report.data).display
       end
 
       def self.report_add_job(workers_ids)

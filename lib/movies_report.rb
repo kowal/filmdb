@@ -36,10 +36,10 @@ module MoviesReport
   require 'movies_report/report'
   require 'movies_report/workers/web_search_worker'
 
-  require 'movies_report/console_reporter'
   require 'movies_report/background_job'
-  
+
   require 'movies_report/cli/options'
+  require 'movies_report/cli/table_reporter'
   require 'movies_report/cli/progressbar'
   require 'movies_report/cli/app'
 end
