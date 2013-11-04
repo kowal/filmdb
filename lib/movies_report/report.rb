@@ -2,6 +2,57 @@
 
 module MoviesReport
 
+  class BaseStrategy
+
+    # @return [Array<Hash>]
+    def run(movies)
+      movies.map do |movie|
+        { title: movie[:title] }.merge(movie_stats(movie[:title]))
+      end
+    end
+
+    def movie_stats(title)
+      results = { ratings: {} }
+      MoviesReport::SERVICES.each do |service_key, service|
+        # FilmDB.register_service :imdb, ::Service::IMDB
+        # results[:ratings][:imdb] = [String|Hash]
+        results[:ratings][service_key] = each_film_in_service(title, service, service_key)
+      end
+      results
+    end
+  end
+
+  class SimpleStrategy < BaseStrategy
+
+    def each_film_in_service(title, service, service_key)
+      track_progress { service.new(title).rating }
+    end
+
+    def track_progress(&block)
+      print '.'
+      $stdout.flush
+      block.call
+    end
+  end
+
+  class BackgroundStrategy < BaseStrategy
+
+    def each_film_in_service(title, service, service_key)
+      MoviesReport::WebSearchWorker.perform_async(title, service_key)
+    end
+
+  end
+
+  STRATEGIES = {
+    default:    SimpleStrategy,
+    background: BackgroundStrategy
+  }
+
+  SERVICES = {
+    filmweb: MoviesReport::Search::Filmweb,
+    imdb: MoviesReport::Search::IMDB
+  }
+
   # Report:
   # - takes movies data source class
   # - for each movie from data source, create rankings
@@ -10,32 +61,26 @@ module MoviesReport
 
     attr_reader :data
 
+
     def initialize(report_options={})
       movies_url    = report_options.fetch(:url) { raise "url not given!" }
       source_engine = report_options.fetch(:engine) { "engine not given!" }
-      @work_in_background = report_options.fetch(:background) { false }
 
       @movies_uri    = URI(movies_url)
       @movies_source = source_engine.new(@movies_uri)
       @data = []
     end
 
-    def build!
-      _movies = movies_collection
-      @data = _movies.map do |movie|
-        { title:   movie[:title],
-          ratings: build_rankings(movie[:title]) }
-      end
-      @data
+    def build!(strategy=:default)
+      @data = select_strategy(strategy).run(extracted_movie_list)
     end
 
-    def movies_collection
+    def select_strategy(strategy)
+      MoviesReport::STRATEGIES[strategy].new
+    end
+
+    def extracted_movie_list
       @movies_source.all_movies.uniq { |movie| movie[:title] }
-    end
-
-    def build_rankings(title)
-      { filmweb: filmweb_rating(title),
-        imdb:    imdb_rating(title) }
     end
 
     def workers_ids
@@ -46,28 +91,6 @@ module MoviesReport
 
     def all_ratings
       @data.map { |movie| movie[:ratings].values }.flatten
-    end
-
-    def filmweb_rating(title)
-      if @work_in_background
-        MoviesReport::WebSearchWorker.perform_async(title, :filmweb)
-      else
-        get_rating { MoviesReport::Search::Filmweb.new(title).rating }
-      end
-    end
-
-    def imdb_rating(title)
-      if @work_in_background
-        MoviesReport::WebSearchWorker.perform_async(title, :imdb)
-      else
-        get_rating { MoviesReport::Search::IMDB.new(title).rating }
-      end
-    end
-
-    def get_rating(&block)
-      print '.'
-      $stdout.flush
-      block.call
     end
 
   end

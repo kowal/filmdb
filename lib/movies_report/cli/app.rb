@@ -9,7 +9,7 @@ module MoviesReport
     class App
 
       CLI_JOB_REFRESH_INTERVAL = 0.5
-      CLI_LOG_FORMATTER = proc { |_, _, _, msg| "[MoviesReport] #{msg}\n" }
+      CLI_LOG_FORMATTER = proc { |_, _, _, msg| "[FilmDB] #{msg}\n" }
 
       def self.start(argv)
         options = parse_options(argv)
@@ -69,7 +69,7 @@ module MoviesReport
       def self.create_report report_options
         MoviesReport.logger.info "Building report. Please wait.."
         MoviesReport::Report.new(report_options).tap do |movies_report|
-          movies_report.build!
+          movies_report.build!(report_options[:background] ? :background : :default)
         end
       end
 
