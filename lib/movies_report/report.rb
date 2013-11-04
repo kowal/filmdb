@@ -38,19 +38,15 @@ module MoviesReport
         imdb:    imdb_rating(title) }
     end
 
-    def read_rankings
-      MoviesReport::FilmwebWorker.find_job(job_id)
-    end
-
-    def all_ratings
-      @data.map { |movie| movie[:ratings].values }.flatten
-    end
-
     def workers_ids
       all_ratings
     end
 
     private
+
+    def all_ratings
+      @data.map { |movie| movie[:ratings].values }.flatten
+    end
 
     def filmweb_rating(title)
       if @work_in_background
