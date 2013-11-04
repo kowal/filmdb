@@ -10,4 +10,4 @@ $:.unshift File.expand_path("../../lib", bin_file)
 
 require 'movies_report'
 
-MoviesReport::CLI.start(ARGV)
+MoviesReport::Cli::App.start(ARGV)

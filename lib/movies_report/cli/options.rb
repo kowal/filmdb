@@ -13,7 +13,7 @@ module MoviesReport
         options = OpenStruct.new
 
         opt_parser = OptionParser.new do |opts|
-          opts.banner = "Usage: movies-report [options] source_url"
+          opts.banner = "Usage: movies-report [OPTIONS]"
 
           opts.on('-u', '--url URL', 'URL with movies to check') do |url|
             options.url = url

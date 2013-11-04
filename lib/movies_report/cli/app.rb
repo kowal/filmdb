@@ -24,7 +24,7 @@ module MoviesReport
       end
 
       def self.parse_options(argv)
-        MoviesReport::CommandLineOptions.parse(argv)
+        MoviesReport::Cli::Options.parse(argv)
       end
 
       def self.run report_options = {}
