@@ -25,8 +25,8 @@ Usage: movies-report [OPTIONS]
 ```bash
 $ movies-report -b true -k true -u 'http://chomikuj.pl/Lektor.pl'
 
-Building report. Please wait..
-[59/60] |================================  | 98%
+[FilmDB] Building report. Please wait..
+[FilmDB] [59/60] |================================  | 98%
 
 +----------------------------+---------+------+
 | Title                      | Filmweb | Imdb |
