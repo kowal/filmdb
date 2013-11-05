@@ -19,10 +19,6 @@ module MoviesReport
             options.url = url
           end
 
-          opts.on('-b', '--background BACKGROUND', 'Run in background') do
-            options.background = true
-          end
-
           opts.on('-k', '--keep KEEP_CONNECTION', 'Keep connection until all job are finished') do
             options.keep = true
           end

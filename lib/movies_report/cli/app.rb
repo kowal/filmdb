@@ -31,28 +31,23 @@ module MoviesReport
         report_options = default_options.merge(report_options)
 
         if report_options[:job_id]
-          result = report_job_status(report_options[:job_id])
+          result = BackgroundJob.fetch_data report_options[:job_id]
           print_job_results(result)
         else
-          if report_options[:background]
-            if report_options[:keep]
-              job_progress = Progressbar.new(CLI_JOB_REFRESH_INTERVAL)
-              movies_report = create_report(report_options)
+          movies_report = MoviesReport::Report.new(report_options)
 
-              job_id = report_add_job movies_report.workers_ids
-              job_progress.for_each_step do
-                report_job_status(job_id.to_i, workers_ids: movies_report.workers_ids)
-              end
-              print_job_results(job_progress.result)
-            else
-              movies_report = create_report(report_options)
-              job_id = report_add_job movies_report.workers_ids
-              MoviesReport.logger.info "Scheduled job => #{job_id}"
+          if report_options[:keep]
+            job_progress = Progressbar.new(CLI_JOB_REFRESH_INTERVAL)
+            movies_report.build!(:background)
+            job_id = BackgroundJob.new(movies_report.workers_ids).save
+            job_progress.for_each_step do
+              BackgroundJob.fetch_data job_id.to_i, workers_ids: movies_report.workers_ids
             end
+            print_job_results(job_progress.result)
           else
-            movies_report = create_report(report_options)
-            MoviesReport.logger.info "Building finished."
-            report_in_console movies_report
+            movies_report.build!(:background)
+            job_id = BackgroundJob.new(movies_report.workers_ids).save
+            MoviesReport.logger.info "Scheduled job => #{job_id}"
           end
         end
       end
@@ -66,23 +61,8 @@ module MoviesReport
         exit
       end
 
-      def self.create_report report_options
-        MoviesReport.logger.info "Building report. Please wait.."
-        MoviesReport::Report.new(report_options).tap do |movies_report|
-          movies_report.build!(report_options[:background] ? :background : :default)
-        end
-      end
-
       def self.report_in_console(movies_report)
         TableReporter.new(movies_report.data).display
-      end
-
-      def self.report_add_job(workers_ids)
-        BackgroundJob.new(workers_ids).save
-      end
-
-      def self.report_job_status(job_id, opts={})
-        BackgroundJob.find(job_id, opts)
       end
 
       def self.default_options

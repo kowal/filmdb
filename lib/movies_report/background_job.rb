@@ -17,8 +17,12 @@ module MoviesReport
     STORAGE = Redis.new
     class << self
 
-      def find(job_id, opts={})
-        workers_ids = opts.fetch(:workers_ids) { JSON.parse(STORAGE.get(job_id.to_s)) }
+      def find(job_id)
+        JSON.parse(STORAGE.get(job_id.to_s))
+      end
+
+      def fetch_data(job_id, opts={})
+        workers_ids = opts.fetch(:workers_ids) { self.find(job_id) }
 
         results = {}
         stats = { started: 0, finished: 0 }

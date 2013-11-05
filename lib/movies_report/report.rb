@@ -71,8 +71,10 @@ module MoviesReport
       @data = []
     end
 
-    def build!(strategy=:default)
-      @data = select_strategy(strategy).run(extracted_movie_list)
+    def build!(strategy_name=:default)
+      strategy = select_strategy(strategy_name)
+      MoviesReport.logger.info "Building report (#{strategy_name}). Please wait.."
+      @data = strategy.run(extracted_movie_list)
     end
 
     def select_strategy(strategy)

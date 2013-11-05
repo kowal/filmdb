@@ -16,7 +16,6 @@ Run ```movies-report -h``` to see available commands.
 ```bash
 Usage: movies-report [OPTIONS]
     -u, --url URL                    URL with movies to check
-    -b, --background BACKGROUND      Run in background
     -k, --keep KEEP_CONNECTION       Keep connection until all job are finished
     -j, --job JOB_ID                 Read Status of job
 ```

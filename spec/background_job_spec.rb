@@ -12,4 +12,14 @@ describe MoviesReport::BackgroundJob do
     expect{ job_id = @job.save }.to change{job_id}
   end
 
+  it 'find job by id' do
+    initial_data = %w{ 10 20 30 }
+    @job = MoviesReport::BackgroundJob.new(initial_data)
+    job_id = @job.save
+
+    job = MoviesReport::BackgroundJob.find(job_id)
+
+    expect(job).to match_array(initial_data)
+  end
+
 end
