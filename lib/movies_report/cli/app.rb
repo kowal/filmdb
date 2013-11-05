@@ -33,23 +33,20 @@ module MoviesReport
         keep   = report_options[:keep]
         url    = report_options[:url]
 
-        if job_id
-          result = job_status(job_id)
-          print_job_results(result)
+        result = if job_id
+          job_status(read_job(job_id))
         else
           report = create_report url: url
           if keep
-            result = create_job_and_pool(report)
-            print_job_results(result)
+            refresh_job_status(report)
           else
-            result = create_job(report.workers_ids)
-            print_job_results(result)
+            save_job(report)
           end
         end
+        print_job_results(result)
       end
 
-      def self.job_status(job_id)
-        workers_ids = BackgroundJob.find job_id
+      def self.job_status(workers_ids)
         BackgroundStrategy.new.current_result(workers_ids)
       end
 
@@ -60,16 +57,18 @@ module MoviesReport
         end
       end
 
-      def self.create_job(workers_ids)
-        BackgroundJob.new(workers_ids).save.to_s
+      def self.refresh_job_status(report)
+        job_progress = Progressbar.new(CLI_JOB_REFRESH_INTERVAL)
+        job_progress.for_each_step { job_status(report.workers_ids) }
+        job_progress.result
       end
 
-      def self.create_job_and_pool(report)
-        job_progress = Progressbar.new(CLI_JOB_REFRESH_INTERVAL)
-        job_progress.for_each_step do
-          BackgroundStrategy.new.current_result(report.workers_ids)
-        end
-        job_progress.result
+      def self.save_job(report)
+        BackgroundJob.new(report.workers_ids).save.to_s
+      end
+
+      def self.read_job(job_id)
+        BackgroundJob.find(job_id)
       end
 
       def self.print_job_results(result)
