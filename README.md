@@ -48,7 +48,7 @@ To keep app process until all results are fetched, use ```--keep``` flag.
 ```bash
 $ movies-report -k true -u 'http://chomikuj.pl/Lektor.pl'
 # [FilmDB] Building report. Please wait..
-# [FilmDB] [45/60] |========================        | 75%
+# [FilmDB] [45/60] |================        | 75%
 
 # +----------------------------+---------+------+
 # | Title                      | Filmweb | Imdb |
