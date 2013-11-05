@@ -2,7 +2,7 @@
 
 module MoviesReport
 
-  # Stores Sidekiq workers IDs and reads their statuses
+  # Stores/reads Sidekiq workers IDs
   # 
   # Store
   #   job = BackgroundJob.new [ '732939232', '9688471622', ... ]
@@ -10,7 +10,7 @@ module MoviesReport
   #
   # Read
   #   statuses = BackgroundJob.find(15) # or '15'
-  #   statuses.first # => { status: 'complete', update_time: 1360006573, foo: 'bar'}
+  #   statuses # => [ '732939232', '9688471622', ... ]
   #
   class BackgroundJob
 
@@ -21,33 +21,6 @@ module MoviesReport
         JSON.parse(STORAGE.get(job_id.to_s))
       end
 
-      def fetch_data(job_id, opts={})
-        workers_ids = opts.fetch(:workers_ids) { self.find(job_id) }
-
-        results = {}
-        stats = { started: 0, finished: 0 }
-        workers_ids.each do |worker_id|
-          data = Sidekiq::Status::get_all worker_id
-
-          return {} unless data['state']
-
-          stats[data['state'].to_sym] += 1
-
-          results[data['title']] ||= []
-          if data['rating'] && data['rating'] != '' && data['rating'] != '0.0'
-            results[data['title']] << Float(data['rating'])
-          end
-        end
-        hash_results = { status: stats }
-        results.map do |title, ratings|
-          hash_results[title] = ratings.compact.inject{ |sum, el| sum + el }.to_f / ratings.size
-        end
-        hash_results
-      end
-
-      def valid_float?(str)
-        !!Float(str) rescue false
-      end
     end
 
     def initialize(workers_ids)

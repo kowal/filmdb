@@ -16,7 +16,7 @@ module MoviesReport
       MoviesReport::SERVICES.each do |service_key, service|
         # FilmDB.register_service :imdb, ::Service::IMDB
         # results[:ratings][:imdb] = [String|Hash]
-        results[:ratings][service_key] = each_film_in_service(title, service, service_key)
+        results[:ratings][service_key] = each_film(title, service, service_key)
       end
       results
     end
@@ -24,7 +24,7 @@ module MoviesReport
 
   class SimpleStrategy < BaseStrategy
 
-    def each_film_in_service(title, service, service_key)
+    def each_film(title, service, service_key)
       track_progress { service.new(title).rating }
     end
 
@@ -37,8 +37,32 @@ module MoviesReport
 
   class BackgroundStrategy < BaseStrategy
 
-    def each_film_in_service(title, service, service_key)
+    # @retutn [String] worker_id ID which fetches info for given title
+    def each_film(title, service, service_key)
       MoviesReport::WebSearchWorker.perform_async(title, service_key)
+    end
+
+    # @return [Hash] hash with current results
+    def current_result(workers_ids)
+      results = {}
+      stats = { started: 0, finished: 0 }
+      workers_ids.each do |worker_id|
+        data = MoviesReport::WebSearchWorker.get_worker_data(worker_id)
+
+        return {} unless data['state']
+
+        stats[data['state'].to_sym] += 1
+
+        results[data['title']] ||= []
+        if data['rating'] && data['rating'] != '' && data['rating'] != '0.0'
+          results[data['title']] << Float(data['rating'])
+        end
+      end
+      hash_results = { status: stats }
+      results.map do |title, ratings|
+        hash_results[title] = ratings.compact.inject{ |sum, el| sum + el }.to_f / ratings.size
+      end
+      hash_results
     end
 
   end
@@ -59,22 +83,20 @@ module MoviesReport
   #
   class Report
 
-    attr_reader :data
-
+    attr_reader :data, :strategy
 
     def initialize(report_options={})
-      movies_url    = report_options.fetch(:url) { raise "url not given!" }
-      source_engine = report_options.fetch(:engine) { "engine not given!" }
-
+      movies_url     = report_options.fetch(:url) { raise "url not given!" }
+      @source_engine = report_options.fetch(:engine) { raise "engine not given!" }
       @movies_uri    = URI(movies_url)
-      @movies_source = source_engine.new(@movies_uri)
       @data = []
     end
 
     def build!(strategy_name=:default)
-      strategy = select_strategy(strategy_name)
-      MoviesReport.logger.info "Building report (#{strategy_name}). Please wait.."
-      @data = strategy.run(extracted_movie_list)
+      @strategy = select_strategy(strategy_name)
+      MoviesReport.logger.info "Building report (#{strategy_name}) .."
+      @movies_source = @source_engine.new(@movies_uri)
+      @data = @strategy.run(extracted_movie_list)
     end
 
     def select_strategy(strategy)

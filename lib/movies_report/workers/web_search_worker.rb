@@ -34,5 +34,9 @@ module MoviesReport
       true
     end
 
+    def self.get_worker_data(worker_id)
+      Sidekiq::Status::get_all(worker_id)
+    end
+
   end
 end

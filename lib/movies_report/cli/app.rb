@@ -9,7 +9,8 @@ module MoviesReport
     class App
 
       CLI_JOB_REFRESH_INTERVAL = 0.5
-      CLI_LOG_FORMATTER = proc { |_, _, _, msg| "[FilmDB] #{msg}\n" }
+      CLI_LOG_FORMATTER        = proc { |_, _, _, msg| "[FilmDB] #{msg}\n" }
+      CLI_DEFAULT_OPTIONS      = { engine: Source::Chomikuj }
 
       def self.start(argv)
         options = parse_options(argv)
@@ -28,45 +29,63 @@ module MoviesReport
       end
 
       def self.run report_options = {}
-        report_options = default_options.merge(report_options)
+        job_id = report_options[:job_id]
+        keep   = report_options[:keep]
+        url    = report_options[:url]
 
-        if report_options[:job_id]
-          result = BackgroundJob.fetch_data report_options[:job_id]
+        if job_id
+          result = job_status(job_id)
           print_job_results(result)
         else
-          movies_report = MoviesReport::Report.new(report_options)
-
-          if report_options[:keep]
-            job_progress = Progressbar.new(CLI_JOB_REFRESH_INTERVAL)
-            movies_report.build!(:background)
-            job_id = BackgroundJob.new(movies_report.workers_ids).save
-            job_progress.for_each_step do
-              BackgroundJob.fetch_data job_id.to_i, workers_ids: movies_report.workers_ids
-            end
-            print_job_results(job_progress.result)
+          report = create_report url: url
+          if keep
+            result = create_job_and_pool(report)
+            print_job_results(result)
           else
-            movies_report.build!(:background)
-            job_id = BackgroundJob.new(movies_report.workers_ids).save
-            MoviesReport.logger.info "Scheduled job => #{job_id}"
+            result = create_job(report.workers_ids)
+            print_job_results(result)
           end
         end
       end
 
+      def self.job_status(job_id)
+        workers_ids = BackgroundJob.find job_id
+        BackgroundStrategy.new.current_result(workers_ids)
+      end
+
+      def self.create_report(options)
+        options.merge!(CLI_DEFAULT_OPTIONS)
+        MoviesReport::Report.new(options).tap do |report|
+          report.build!(:background)
+        end
+      end
+
+      def self.create_job(workers_ids)
+        BackgroundJob.new(workers_ids).save.to_s
+      end
+
+      def self.create_job_and_pool(report)
+        job_progress = Progressbar.new(CLI_JOB_REFRESH_INTERVAL)
+        job_progress.for_each_step do
+          BackgroundStrategy.new.current_result(report.workers_ids)
+        end
+        job_progress.result
+      end
+
       def self.print_job_results(result)
+        if result.is_a?(String)
+          MoviesReport.logger.info "Scheduled job => #{result}"
+          exit
+        end
         finished = result[:status][:finished]
         total = result[:status][:started] + finished
         MoviesReport.logger.info "Results: (#{finished}/#{total})"
         result.delete :status
         ap result
-        exit
       end
 
       def self.report_in_console(movies_report)
         TableReporter.new(movies_report.data).display
-      end
-
-      def self.default_options
-        { engine: Source::Chomikuj }
       end
 
     end

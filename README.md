@@ -26,7 +26,8 @@ Run in background
 
 ```bash
 $ movies-report -u 'http://chomikuj.pl/Lektor.pl'
-# [FilmDB] Building report (background). Please wait..
+# [FilmDB] Fetching page ..
+# [FilmDB] Building report (background). ..
 # [FilmDB] Scheduled job => 109
 ```
 
@@ -47,7 +48,8 @@ To keep app process until all results are fetched, use ```--keep``` flag.
 
 ```bash
 $ movies-report -k true -u 'http://chomikuj.pl/Lektor.pl'
-# [FilmDB] Building report. Please wait..
+# [FilmDB] Fetching page ..
+# [FilmDB] Building report (background). Please wait..
 # [FilmDB] [45/60] |================        | 75%
 
 # +----------------------------+---------+------+
