@@ -20,21 +20,42 @@ Usage: movies-report [OPTIONS]
     -j, --job JOB_ID                 Read Status of job
 ```
 
+### Examples
+
+Run in background
 
 ```bash
-$ movies-report -b true -k true -u 'http://chomikuj.pl/Lektor.pl'
+$ movies-report -u 'http://chomikuj.pl/Lektor.pl'
+# [FilmDB] Building report (background). Please wait..
+# [FilmDB] Scheduled job => 109
+```
 
-[FilmDB] Building report. Please wait..
-[FilmDB] [59/60] |================================  | 98%
+Check job status using ```--job``` flag:
+```bash
+$ movies-report -j 109
+# [FilmDB] Results: (45/60)
+# +----------------------------+---------+------+
+# | Title                      | Filmweb | Imdb |
+# +----------------------------+---------+------+
+# | Last Minute                |    -    | 4.3  |
+# | Dont Cry                   |    -    |  -   |
+# | Jednostka - Entity         |    -    | 6.0  |
+# | ...                        |    -    |  -   |
+```
 
-+----------------------------+---------+------+
-| Title                      | Filmweb | Imdb |
-+----------------------------+---------+------+
-| Bezpieczna Przystań        |   7.4   |  -   |
-| Last Minute                |   5.2   | 4.3  |
-| Dont Cry                   |    -    |  -   |
-| Jednostka - Entity         |    -    | 6.0  |
-+----------------------------+---------+------+
+To keep app process until all results are fetched, use ```--keep``` flag.
+
+```bash
+$ movies-report -k true -u 'http://chomikuj.pl/Lektor.pl'
+# [FilmDB] Building report. Please wait..
+# [FilmDB] [45/60] |========================        | 75%
+
+# +----------------------------+---------+------+
+# | Title                      | Filmweb | Imdb |
+# +----------------------------+---------+------+
+# | Bezpieczna Przystań        |   7.4   |  -   |
+# | Last Minute                |   5.2   | 4.3  |
+# | ...
 ```
 
 ## API
