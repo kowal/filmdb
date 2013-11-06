@@ -22,7 +22,7 @@ module MoviesReport
           begin
             Timeout::timeout(@timeout_in_seconds) do
               @result = block.call
-              update_progressbar(@result[:status])
+              update_progressbar(@result)
             end
           rescue Timeout::Error
             next
@@ -30,16 +30,23 @@ module MoviesReport
         end
       end
 
-      def update_progressbar(status)
-        return unless status
+      def update_progressbar(result)
+        unless result[:status]
+          return
+        else
+          started = result[:status][:started]
+          finished = result[:status][:finished]
 
-        started = status[:started]
-        finished = status[:finished]
-
-        @pending_jobs = started.to_i > 0
-        if @pending_jobs
-          @progressbar ||= create_progressbar(started + finished)
-          @progressbar.progress = finished
+          @pending_jobs = started.to_i > 0
+          if @pending_jobs
+            @progressbar ||= create_progressbar(started + finished)
+            valid_data = result.values[1..-1]
+            if valid_data
+              sparks_values = valid_data.map { |v| v.nan? ? 5 : 10 }
+            end
+            @progressbar.format "%t [%c/%C] |%B| %p% #{sparks(sparks_values)}"
+            @progressbar.progress = finished
+          end
         end
       end
 
@@ -48,9 +55,22 @@ module MoviesReport
           :title => "[FilmDB] Fetching stats",
           :starting_at => 0,
           :total => total,
-          :length => 100,
-          :format => '%t [%c/%C] |%B| %p%'
+          :length => 100
         })
+      end
+
+      # Sparks visualizaiton
+      # Taken from https://gist.github.com/jcromartie/1367091
+      #
+      def sparks(values)
+        @ticks = %w[▁ ▂ ▃ ▄ ▅ ▆ ▇]
+        values = values.map { |x| x.to_f }
+        min, range, scale = values.min, values.max - values.min, @ticks.length - 1
+        if !(range == 0)
+          values.map { |x| @ticks[(((x - min) / range) * scale).round] }.join
+        else
+          values.map { |x| @ticks[1] }.join
+        end
       end
 
     end
