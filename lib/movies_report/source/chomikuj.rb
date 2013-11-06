@@ -107,7 +107,7 @@ module MoviesReport
         raise ArgumentError.new('String to sanitize not given!') if str.nil?
 
         str.gsub(/#{TO_REMOVE.join('|')}/, '')
-          .gsub(/[-\s\.]+$|\(.*\d+.*\).*/, '')
+          .gsub(/[-\s\.]+$|20\d\d.*$|\(.*\d+.*\).*/, '')
           .strip
       end
     end

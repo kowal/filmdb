@@ -11,6 +11,7 @@ module MoviesReport
         MoviesReport::WebSearchWorker.perform_async(title, service_key)
       end
 
+      # @param [Array] workers_ids
       # @return [Hash] hash with current results
       def current_result(workers_ids)
         results = {}
