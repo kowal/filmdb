@@ -78,7 +78,7 @@ module MoviesReport
         end
         finished = result[:status][:finished]
         total = result[:status][:started] + finished
-        MoviesReport.logger.info "Results: (#{finished}/#{total})"
+        MoviesReport.logger.info "Results:"
         result.delete :status
         ap result
       end

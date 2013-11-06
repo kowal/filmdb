@@ -42,10 +42,13 @@ module MoviesReport
             @progressbar ||= create_progressbar(started + finished)
             valid_data = result.values[1..-1]
             if valid_data
-              sparks_values = valid_data.map { |v| v.nan? ? 5 : 10 }
+              sparks_values = valid_data.map { |v| v.nan? ? 0 : v.to_i }
             end
-            @progressbar.format "%t [%c/%C] |%B| %p% #{sparks(sparks_values)}"
+            @progressbar.format "%t [%c/%C] #{sparks(sparks_values)} %p%"
             @progressbar.progress = finished
+          else
+            @progressbar.format ""
+            @progressbar.log("[FilmDB] Finished!")
           end
         end
       end
@@ -55,7 +58,7 @@ module MoviesReport
           :title => "[FilmDB] Fetching stats",
           :starting_at => 0,
           :total => total,
-          :length => 100
+          :length => 70
         })
       end
 
