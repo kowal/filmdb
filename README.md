@@ -44,14 +44,15 @@ $ movies-report -j 109
 # | ...                        |    -    |  -   |
 ```
 
-To keep app process until all results are fetched, use ```--keep``` flag.
+To keep alive application process until all results are fetched, use ```--keep``` flag.
+Current progres will be visualized (sparks represents ratings for each film).
 
 ```bash
 $ movies-report -k true -u 'http://chomikuj.pl/Lektor.pl'
 # [FilmDB] Fetching page ..
 # [FilmDB] Building report (background). Please wait..
-# [FilmDB] [45/60] |================        | 75%
-
+# [FilmDB] Fetching stats [59/60] ▁▆▅▁▆▁▁▁▁▁▇▁▇▁▁▁▇▁▁▆▅▆▇▄▁▁▇▆▇▇▆ 98%
+#
 # +----------------------------+---------+------+
 # | Title                      | Filmweb | Imdb |
 # +----------------------------+---------+------+
