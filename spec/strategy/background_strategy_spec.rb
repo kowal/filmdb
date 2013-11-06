@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe MoviesReport::Strategy::Background do
 
-  it 'saves jobs under incremented job-id numbers' do
+  it '#current_result' do
     stub_film_rating 1, 'MovieA', 'finished', 5.0
     stub_film_rating 2, 'MovieA', 'finished', 10.0
     stub_film_rating 5, 'MovieA', 'finished', 6.5
