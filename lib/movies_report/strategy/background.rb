@@ -30,7 +30,7 @@ module MoviesReport
         end
         hash_results = { status: stats }
         results.map do |title, ratings|
-          hash_results[title] = (ratings.compact.inject{ |sum, el| sum + el }.to_f / ratings.size).round(2)
+          hash_results[title] = (ratings.compact.inject{ |sum, el| sum + el }.to_f / ratings.size).round(1)
         end
         hash_results
       end

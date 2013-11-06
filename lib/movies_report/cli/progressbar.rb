@@ -42,7 +42,7 @@ module MoviesReport
             @progressbar ||= create_progressbar(started + finished)
             valid_data = result.values[1..-1]
             if valid_data
-              sparks_values = valid_data.map { |v| v.nan? ? 0 : (v.to_i - 2) }
+              sparks_values = valid_data.map { |v| v.nan? ? 0 : (v.to_i - 4) }
             end
             @progressbar.format "%t [%c/%C] #{sparks(sparks_values)} %p%"
             @progressbar.progress = finished
