@@ -25,7 +25,7 @@ module MoviesReport
       end
 
       def self.parse_options(argv)
-        MoviesReport::Cli::Options.parse(argv)
+        Cli::Options.parse(argv)
       end
 
       def self.run report_options = {}
@@ -47,12 +47,12 @@ module MoviesReport
       end
 
       def self.job_status(workers_ids)
-        BackgroundStrategy.new.current_result(workers_ids)
+        Strategy::Background.new.current_result(workers_ids)
       end
 
       def self.create_report(options)
         options.merge!(CLI_DEFAULT_OPTIONS)
-        MoviesReport::Report.new(options).tap do |report|
+        Report.new(options).tap do |report|
           report.build!(:background)
         end
       end

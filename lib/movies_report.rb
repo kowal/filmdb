@@ -33,6 +33,10 @@ module MoviesReport
   require 'movies_report/search/imdb'
   require 'movies_report/source/chomikuj'
 
+  require 'movies_report/strategy/base'
+  require 'movies_report/strategy/simple'
+  require 'movies_report/strategy/background'
+
   require 'movies_report/report'
   require 'movies_report/workers/web_search_worker'
 
