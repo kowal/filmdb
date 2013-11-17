@@ -25,11 +25,11 @@ module MoviesReport
           { rating: movie_rating }
         end
 
+        private
+
         def search_results(document)
           document.css(RATE_INFO_SELECTOR)
         end
-
-        private
 
         def html_document_for(title)
           HtmlPage.new(filmweb_search_url(title)).document
