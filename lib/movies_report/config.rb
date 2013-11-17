@@ -20,6 +20,7 @@ module MoviesReport
     end
 
     def register_service(service_name, service_class)
+      services[service_name] = service_class
     end
 
     def register_strategy(strategy_name, strategy_class)
@@ -30,6 +31,9 @@ module MoviesReport
       @strategies ||= {}
     end
 
+    def services
+      @services ||= {}
+    end
   end
 
 end

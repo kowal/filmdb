@@ -2,10 +2,16 @@
 
 require 'awesome_print'
 require 'imdb'
+require 'movies_report/config'
 require 'movies_report/search/filmweb'
 require 'movies_report/search/imdb'
 require 'sidekiq'
 require 'sidekiq-status'
+
+MoviesReport.configure do |config|
+  config.register_service :filmweb, MoviesReport::Search::Filmweb
+  config.register_service :imdb, MoviesReport::Search::IMDB
+end
 
 module MoviesReport
 
@@ -15,17 +21,12 @@ module MoviesReport
 
     sidekiq_options 'retry' => 'false'
 
-    SERVICES = {
-      filmweb: MoviesReport::Search::Filmweb,
-      imdb:    MoviesReport::Search::IMDB
-    }
-
     def perform(title, service)
       return if retrieve(:rating)
 
       store state: 'started'
       logger.debug { "[Job] : '#{title}'" }
-      search_result = SERVICES[service.to_sym].new(title)
+      search_result = MoviesReport.services[service.to_sym].new(title)
 
       store title: title
       store rating: search_result.rating
