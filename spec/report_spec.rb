@@ -63,7 +63,7 @@ describe MoviesReport::Report do
     end
 
     def expect_run_strategy(strategy)
-      MoviesReport::STRATEGIES[strategy].any_instance.expects(:run)
+      MoviesReport.strategies[strategy].any_instance.expects(:run)
     end
   end
 

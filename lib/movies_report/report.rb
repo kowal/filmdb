@@ -2,11 +2,6 @@
 
 module MoviesReport
 
-  STRATEGIES = {
-    default:    Strategy::Simple,
-    background: Strategy::Background
-  }
-
   # Report:
   # - takes movies data source class
   # - for each movie from data source, create rankings
@@ -30,7 +25,7 @@ module MoviesReport
     end
 
     def select_strategy(strategy)
-      MoviesReport::STRATEGIES[strategy].new
+      MoviesReport.strategies[strategy].new
     end
 
     def extracted_movie_list

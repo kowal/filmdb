@@ -52,4 +52,7 @@ MoviesReport.configure do |config|
   config.logger = Logger.new(STDOUT).tap do |log|
     log.level = Logger::WARN
   end
+
+  config.register_strategy :default, MoviesReport::Strategy::Simple
+  config.register_strategy :background, MoviesReport::Strategy::Background
 end
