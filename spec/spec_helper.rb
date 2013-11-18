@@ -4,8 +4,10 @@ if ENV['TRAVIS'] == 'true'
   require 'coveralls'
   Coveralls.wear!
 else
-  require 'simplecov'
-  SimpleCov.start
+  unless RUBY_PLATFORM == 'java'
+    require 'simplecov'
+    SimpleCov.start
+  end
 end
 
 require 'movies_report'
