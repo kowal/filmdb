@@ -6,16 +6,20 @@ describe MoviesReport::HtmlPage do
 
   subject(:page) { MoviesReport::HtmlPage.new(URI('http://google.pl')) }
 
-  it 'returns document content from URI' do
-    with_expected_http_response do |expected_response_body|
-      expect(page.document.inner_html.downcase.gsub(/\s+/, '')).to eq(expected_response_body.downcase)
+  # see https://github.com/sparklemotion/nokogiri/blob/master/lib/nokogiri/html/document.rb
+  # 
+  unless RUBY_PLATFORM == 'java'
+    it 'returns document content from URI' do
+      with_expected_http_response do |expected_response_body|
+        expect(page.document.inner_html.downcase.gsub(/\s+/, '')).to eq(expected_response_body.downcase)
+      end
     end
-  end
 
-  it 'not fail when URL is given' do
-    with_expected_http_response do |expected_response_body|
-      page = MoviesReport::HtmlPage.new('http://google.pl')
-      expect(page.document.inner_html.downcase.gsub(/\s+/, '')).to eq(expected_response_body.downcase)
+    it 'not fail when URL is given' do
+      with_expected_http_response do |expected_response_body|
+        page = MoviesReport::HtmlPage.new('http://google.pl')
+        expect(page.document.inner_html.downcase.gsub(/\s+/, '')).to eq(expected_response_body.downcase)
+      end
     end
   end
 

@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "nokogiri", [">= 1.3.3"]
-  gem.add_dependency "imdb", [">= 0.6.8"]
+  gem.add_dependency "imdb"
   gem.add_dependency "awesome_print", [">= 1.1.0"]
   gem.add_dependency "terminal-table"
   gem.add_dependency "redis"
