@@ -11,8 +11,8 @@ module MoviesReport
     attr_reader :data, :strategy
 
     def initialize(report_options={})
-      movies_url     = report_options.fetch(:url) { raise "url not given!" }
-      @source_engine = report_options.fetch(:engine) { raise "engine not given!" }
+      movies_url     = report_options.fetch(:url)    { raise ArgumentError.new("url not given!") }
+      @source_engine = report_options.fetch(:engine) { raise ArgumentError.new("engine not given!") }
       @movies_uri    = URI(movies_url)
       @data = []
     end
@@ -28,15 +28,15 @@ module MoviesReport
       MoviesReport.strategies[strategy].new
     end
 
-    def extracted_movie_list
-      @movies_source.all_movies.uniq { |movie| movie[:title] }
-    end
-
     def workers_ids
       all_ratings
     end
 
     private
+
+    def extracted_movie_list
+      @movies_source.all_movies.uniq { |movie| movie[:title] }
+    end
 
     def all_ratings
       @data.map { |movie| movie[:ratings].values }.flatten

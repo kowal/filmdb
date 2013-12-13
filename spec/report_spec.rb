@@ -9,10 +9,13 @@ describe MoviesReport::Report do
     def initialize(url) end
   end
 
+  class FooStrategy
+  end
+
   let(:movies_url) { 'http://does.not.matter.com' }
   let(:search_engine_klass) { FakeSearchEngine }
 
-  context 'on create' do
+  context 'create' do
 
     it 'requires url' do
       # MoviesReport::Report.new
@@ -23,48 +26,53 @@ describe MoviesReport::Report do
     end
   end
 
-  context 'on build with default strategy' do
+  context 'build' do
 
     subject(:report) {
       MoviesReport::Report.new url: movies_url, engine: search_engine_klass
     }
 
-    it 'returns title and rankings for each movie' do
-      movies = expect_movies_in_source([
-        { title: 'MovieA' },
-        { title: 'MovieB' }
-      ])
-      expected_data = [
-        { title: 'MovieA', ratings: { filmweb: '5.0', imdb: '7.0' } },
-        { title: 'MovieB', ratings: { filmweb: '6.0', imdb: '8.0' } }
-      ]
-      expect_run_strategy(:default).with(movies).returns(expected_data)
+    context 'with default strategy' do
 
-      report.build!
+      it 'returns results from current strategy' do
+        stub_search_engine_results [:search_engine_results]
+        stub_strategy_run(:default)
+          .with([:search_engine_results])
+          .returns([:strategy_results])
 
-      expect(report.data).to eq(expected_data),
-        'Report results should include proper ratings'
+        report.build!
+
+        expect(report.data).to eq([:strategy_results])
+      end
+
+      it 'returns empty results by default' do
+        expect(report.data).to be_empty
+      end
+
+      it 'returns empty results when no movies are found' do
+        stub_search_engine_results []
+
+        report.build!
+        expect(report.data).to be_empty
+      end
+     
     end
 
-    it 'returns empty results by default' do
-      expect(report.data).to be_empty
+    context 'with custom strategy' do
+
+      it 'should use chosen strategy' do
+        stub_search_engine_results [:foo]
+        MoviesReport.configure do |config|
+          config.register_strategy :foo_strategy, FooStrategy
+        end
+
+        stub_strategy_run(:foo_strategy).with([:foo]).returns('foo')
+
+        report.build! :foo_strategy
+        expect(report.data).to eq('foo')
+      end
     end
 
-    it 'returns empty results when no movies are found' do
-      expect_movies_in_source []
-
-      report.build!
-      expect(report.data).to be_empty
-    end
-
-    def expect_movies_in_source(data)
-      FakeSearchEngine.any_instance.stubs(:all_movies).returns(data)
-      data
-    end
-
-    def expect_run_strategy(strategy)
-      MoviesReport.strategies[strategy].any_instance.expects(:run)
-    end
   end
 
   context 'run on real page' do
@@ -84,4 +92,13 @@ describe MoviesReport::Report do
 
   end
 
+end
+
+def stub_search_engine_results(data)
+  FakeSearchEngine.any_instance.stubs(:all_movies).returns(data)
+  data
+end
+
+def stub_strategy_run(strategy)
+  MoviesReport.strategies[strategy].any_instance.expects(:run)
 end
