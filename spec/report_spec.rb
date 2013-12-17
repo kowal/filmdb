@@ -28,16 +28,18 @@ describe MoviesReport::Report do
 
   context 'build' do
 
-    subject(:report) {
-      MoviesReport::Report.new url: movies_url, engine: search_engine_klass
-    }
+    subject(:report) { MoviesReport::Report.new url: movies_url, engine: search_engine_klass }
+    let(:search_results) { [{ title: :search_engine_results }] }
 
     context 'with default strategy' do
 
       it 'returns results from current strategy' do
-        stub_search_engine_results [:search_engine_results]
+        # stub some 'search results'
+        stub_search_engine_results(search_results)
+        # we're expecting that 'default' strategy will receive
+        # those 'search results' and returns its own
         stub_strategy_run(:default)
-          .with([:search_engine_results])
+          .with(search_results)
           .returns([:strategy_results])
 
         report.build!
@@ -61,12 +63,14 @@ describe MoviesReport::Report do
     context 'with custom strategy' do
 
       it 'should use chosen strategy' do
-        stub_search_engine_results [:foo]
+        stub_search_engine_results search_results
         MoviesReport.configure do |config|
           config.register_strategy :foo_strategy, FooStrategy
         end
 
-        stub_strategy_run(:foo_strategy).with([:foo]).returns('foo')
+        stub_strategy_run(:foo_strategy)
+          .with(search_results)
+          .returns('foo')
 
         report.build! :foo_strategy
         expect(report.data).to eq('foo')
@@ -82,7 +86,10 @@ describe MoviesReport::Report do
       VCR.use_cassette('chomikuj', record: :new_episodes) do
         expected_movies = expected_results_for_site('chomikuj')
 
-        report = MoviesReport::Report.new url: 'http://chomikuj.pl/mocked-page', engine: MoviesReport::Source::Chomikuj
+        report = MoviesReport::Report.new({
+          engine: MoviesReport::Source::Chomikuj
+          url:    'http://chomikuj.pl/mocked-page',
+        })
         report.build!
         actual_movies = report.data.map { |m| m[:title] }
 

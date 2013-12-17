@@ -21,7 +21,10 @@ module MoviesReport
       @strategy = select_strategy(strategy_name)
       MoviesReport.logger.info "Building report (#{strategy_name}) .."
       @movies_source = @source_engine.new(@movies_uri)
-      @data = @strategy.run(extracted_movie_list)
+      movies_results = extract_movie_list
+      if movies_results
+        @data = @strategy.run(movies_results)
+      end
     end
 
     def select_strategy(strategy)
@@ -34,8 +37,8 @@ module MoviesReport
 
     private
 
-    def extracted_movie_list
-      @movies_source.all_movies.uniq { |movie| movie[:title] }
+    def extract_movie_list
+      @movies_source.all_movies { |movie| movie[:title] if movie }
     end
 
     def all_ratings
