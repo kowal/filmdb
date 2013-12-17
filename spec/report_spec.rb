@@ -87,8 +87,8 @@ describe MoviesReport::Report do
         expected_movies = expected_results_for_site('chomikuj')
 
         report = MoviesReport::Report.new({
-          engine: MoviesReport::Source::Chomikuj
-          url:    'http://chomikuj.pl/mocked-page',
+          engine: MoviesReport::Source::Chomikuj,
+          url:    'http://chomikuj.pl/mocked-page'
         })
         report.build!
         actual_movies = report.data.map { |m| m[:title] }
