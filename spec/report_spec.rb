@@ -4,26 +4,52 @@ require 'spec_helper'
 
 describe MoviesReport::Report do
 
-  # dumb search engine impl.
+  # fake registered source
   class FakeSearchEngine
     def initialize(url) end
   end
+  MoviesReport.register_source 'http://fake-search-engine.com', FakeSearchEngine
 
-  class FooStrategy
+  # fake unregistered source
+  class GreateMoviesSource
+    def initialize(url) end
   end
 
-  let(:movies_url) { 'http://does.not.matter.com' }
+  # fake unregistered source
+  class FooSource
+    def initialize(url) end
+  end
+
+  class FooStrategy; end
+
+  let(:movies_url) { 'http://fake-search-engine.com/top-movies/page/1' }
   let(:search_engine_klass) { FakeSearchEngine }
 
   context 'create' do
 
     it 'requires url' do
-      # MoviesReport::Report.new
+      expect { MoviesReport::Report.new({}) }.to raise_error ArgumentError
     end
 
-    it 'recognizes search engine' do
-      # MoviesReport::Report.register_search 'my.search.engine.pl', FakeSearchEngine
+    it 'recognizes registered source' do
+      MoviesReport.register_source 'http://greatmovies.pl', GreateMoviesSource
+      report = MoviesReport::Report.new url: 'http://greatmovies.pl/latest/movies'
+
+      expect(report.movies_source).to be_instance_of(GreateMoviesSource)
     end
+
+    it 'fails when non-registered source is used' do
+      expect {
+        MoviesReport::Report.new url: 'www.this.wasnt.registered.com/latest/movies'
+      }.to raise_error ArgumentError
+    end
+
+    it 'allows to provide custom source' do
+      report = MoviesReport::Report.new url: 'www.foo2000.com/latest/movies', engine: FooSource
+
+      expect(report.movies_source).to be_instance_of(FooSource)
+    end
+
   end
 
   context 'build' do
@@ -75,6 +101,7 @@ describe MoviesReport::Report do
         report.build! :foo_strategy
         expect(report.data).to eq('foo')
       end
+
     end
 
   end

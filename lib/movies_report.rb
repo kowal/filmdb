@@ -53,9 +53,11 @@ MoviesReport.configure do |config|
     log.level = Logger::WARN
   end
 
-  config.register_strategy :default, MoviesReport::Strategy::Simple
+  config.register_source 'http://chomikuj.pl', MoviesReport::Source::Chomikuj
+
+  config.register_strategy :default,    MoviesReport::Strategy::Simple
   config.register_strategy :background, MoviesReport::Strategy::Background
 
   config.register_service :filmweb, MoviesReport::Search::Filmweb
-  config.register_service :imdb, MoviesReport::Search::IMDB
+  config.register_service :imdb,    MoviesReport::Search::IMDB
 end
