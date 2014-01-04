@@ -19,7 +19,7 @@ module MoviesReport
             options.url = url
           end
 
-          opts.on('-k', '--keep KEEP_CONNECTION', 'Keep connection until all job are finished') do
+          opts.on('-k', '--keep [KEEP_CONNECTION]', 'Keep connection until all job are finished') do |keep|
             options.keep = true
           end
 
