@@ -6,9 +6,16 @@
 [![Code Climate](https://codeclimate.com/github/kowal/filmdb.png)](https://codeclimate.com/github/kowal/filmdb)
 [![Codeship Status for kowal/movies_report](https://www.codeship.io/projects/4f92a8e0-bce3-0130-8880-5ea7310bec9c/status?branch=master)](https://www.codeship.io/projects/4462)
 
-Simple tool for building movies report. Provides CLI app and API to be used in other applications.
+**This project is work in progress..**
 
-Work in progress..
+## What is this?
+
+Simple tool for fetching movies stats. Provides CLI app and API to be used in other applications.
+
+The idea is to provide tool which can:
+
+* Fetch movie titles from various Sources - for example IMDB chart page
+* For each title, fetch ratings from multple Services and calculate averages
 
 ## CLI
 
