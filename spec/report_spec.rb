@@ -83,6 +83,12 @@ describe MoviesReport::Report do
         report.build!
         expect(report.results).to be_empty
       end
+
+      it 'raises BuildError on any exception' do
+        report.stubs(:extract_movie_list).raises(StandardError)
+
+        expect { report.build! }.to raise_error MoviesReport::Report::BuildError
+      end
      
     end
 

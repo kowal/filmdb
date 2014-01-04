@@ -10,6 +10,8 @@ module MoviesReport
   #
   class Report
 
+    class BuildError < StandardError; end
+
     attr_reader :results, :strategy, :movies_source
 
     # TODO: rename :engine -> movies_source
@@ -29,6 +31,9 @@ module MoviesReport
       movies_results = extract_movie_list
 
       @results = @strategy.run(movies_results)
+
+    rescue StandardError => ex
+      raise BuildError, "Cant build report!. #{ex.message}"
     end
 
     def select_strategy(strategy)

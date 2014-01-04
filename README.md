@@ -14,7 +14,7 @@ Simple tool for fetching movies stats. Provides CLI app and API to be used in ot
 
 The idea is to provide tool which can:
 
-* Fetch movie titles from various Sources - for example IMDB chart page
+* Fetch movie titles from various Sources
 * For each title, fetch ratings from multple Services and calculate averages
 
 ## CLI
@@ -100,21 +100,4 @@ query.source_engine         # => FilmDB::Source::Chomikuj
 query.build!                # => [time consuming ...]
 query.build!(:background)   # => [much faster ..]
 query.results               # => [specific to chosen strategy]
-
-# Use custom Query Strategy
-#
-# 1. Inherit from FilmDB::Strategy::Base
-# 2. Implement #each_film method
-# 3. Register it
-class BestMoviesStrategy < FilmDB::Strategy::Base
-  def each_film(title, service, service_key)
-    rating = SomeLib::BestMovies.find(title).rating
-    "#{rating} (#{service_key})" # => '5.3 (:best)'
-  end
-end
-FilmDB.register_strategy :best, BestMoviesStrategy
-
-FilmDB::Query.new(@query_options).build!(:best)
-# => [ { title: 'Movie A', ratings: { best: '5.3 (:best)', ... } },  ... ]
-
 ```
