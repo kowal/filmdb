@@ -70,18 +70,18 @@ describe MoviesReport::Report do
 
         report.build!
 
-        expect(report.data).to eq([:strategy_results])
+        expect(report.results).to eq([:strategy_results])
       end
 
       it 'returns empty results by default' do
-        expect(report.data).to be_empty
+        expect(report.results).to be_empty
       end
 
       it 'returns empty results when no movies are found' do
         stub_search_engine_results []
 
         report.build!
-        expect(report.data).to be_empty
+        expect(report.results).to be_empty
       end
      
     end
@@ -99,7 +99,7 @@ describe MoviesReport::Report do
           .returns('foo')
 
         report.build! :foo_strategy
-        expect(report.data).to eq('foo')
+        expect(report.results).to eq('foo')
       end
 
     end
@@ -118,7 +118,7 @@ describe MoviesReport::Report do
           url:    'http://chomikuj.pl/mocked-page'
         })
         report.build!
-        actual_movies = report.data.map { |m| m[:title] }
+        actual_movies = report.results.map { |m| m[:title] }
 
         expect(actual_movies).to include(*expected_movies)
       end

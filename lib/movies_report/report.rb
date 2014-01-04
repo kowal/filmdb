@@ -6,9 +6,11 @@ module MoviesReport
   # - takes movies data source class
   # - for each movie from data source, create rankings
   #
+  # TODO: rename to FilmDB::Query
+  #
   class Report
 
-    attr_reader :data, :strategy, :movies_source
+    attr_reader :results, :strategy, :movies_source
 
     # TODO: rename :engine -> movies_source
     #
@@ -17,15 +19,16 @@ module MoviesReport
       @movies_uri    = URI(movies_url)
       @source_engine = report_options.fetch(:engine) { select_source(@movies_uri) || raise_invalid_engine! }
       @movies_source = @source_engine.new(@movies_uri)
-      @data = []
+      @results = []
     end
 
     def build!(strategy_name=:default)
-      @strategy = select_strategy(strategy_name)
       MoviesReport.logger.info "Building report (#{strategy_name}) .."
+
+      @strategy = select_strategy(strategy_name)
       movies_results = extract_movie_list
 
-      build_movies_report(movies_results) if movies_results
+      @results = @strategy.run(movies_results)
     end
 
     def select_strategy(strategy)
@@ -43,16 +46,12 @@ module MoviesReport
 
     private
 
-    def build_movies_report(movies_results)
-      @data = @strategy.run(movies_results)
-    end
-
     def extract_movie_list
       @movies_source.all_movies { |movie| movie[:title] if movie }
     end
 
     def all_ratings
-      @data.map { |movie| movie[:ratings].values }.flatten
+      @results.map { |movie| movie[:ratings].values }.flatten
     end
 
     def raise_invalid_engine!
