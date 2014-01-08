@@ -32,6 +32,12 @@ module MoviesReport
         end
       end
 
+      # Redraw progressbar with given result.
+      #
+      # @param [Hash] data result to display
+      # @example Update progressbar with new data
+      #   update_progressbar( status: { started: 40, finished: 60 } )
+      #
       def update_progressbar(result)
         unless result[:status]
           return
