@@ -4,6 +4,10 @@ module MoviesReport
 
   module Strategy
 
+    # Strategy for retrieving movies stats in background (none-blocking)
+    #
+    # Uses MoviesReport::WebSearchWorker internally.
+    #
     class Background < Base
 
       # @retutn [String] worker_id ID which fetches info for given title
