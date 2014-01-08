@@ -6,6 +6,8 @@ module MoviesReport
 
   module Cli
 
+    # Simple CLI progress-bar build around 'Sparks' visualizaiton.
+    #
     class Progressbar
 
       attr_reader :result, :progressbar
