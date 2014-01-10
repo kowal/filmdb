@@ -10,7 +10,7 @@ module MoviesReport
     #
     class Filmweb
 
-      def initialize(title, service=FilmwebService)
+      def initialize(title, service = FilmwebService)
         @title = title
         @result = service.find(title)
       end

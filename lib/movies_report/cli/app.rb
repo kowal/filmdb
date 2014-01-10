@@ -28,7 +28,7 @@ module MoviesReport
         Cli::Options.parse(argv)
       end
 
-      def self.run report_options = {}
+      def self.run(report_options = {})
         job_id = report_options[:job_id]
         keep   = report_options[:keep]
         url    = report_options[:url]

@@ -7,9 +7,9 @@ module MoviesReport
   module Cli
 
     class TableReporter
-      def initialize(movies_stats, options={})
-        @colorize = options.fetch(:colorize) { true }
 
+      def initialize(movies_stats, options = {})
+        @colorize     = options.fetch(:colorize) { true }
         @movies_stats = movies_stats
       end
 
@@ -45,7 +45,7 @@ module MoviesReport
 
       def average_rating(ratings)
         avg = ratings.values.compact
-          .inject{ |sum, el| sum + el }.to_f / ratings.size
+          .reduce{ |sum, el| sum + el }.to_f / ratings.size
         rating_cell(avg)
       end
 

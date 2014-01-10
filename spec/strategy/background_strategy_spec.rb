@@ -13,8 +13,8 @@ describe MoviesReport::Strategy::Background do
     stub_film_rating 50, 'MovieB', 'started', 10.0
 
     expect(subject.current_result([1, 2, 5, 10, 20, 50])).to eq({
-        "MovieA" => 7.2,
-        "MovieB" => 5.0,
+        'MovieA' => 7.2,
+        'MovieB' => 5.0,
         :status => { :started => 2, :finished => 4 }
       })
   end
@@ -22,9 +22,9 @@ describe MoviesReport::Strategy::Background do
   def stub_film_rating(worker_id, title, state, rating)
     MoviesReport::WebSearchWorker.stubs(:get_worker_data)
       .with(worker_id)
-      .returns({ "state" => state,
-                 "title" => title,
-                 "rating" => rating.to_s })
+      .returns({ 'state' => state,
+                 'title' => title,
+                 'rating' => rating.to_s })
   end
 
 end

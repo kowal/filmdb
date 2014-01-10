@@ -16,7 +16,7 @@ module MoviesReport
 
     # TODO: rename :engine -> movies_source
     #
-    def initialize(report_options={})
+    def initialize(report_options = {})
       movies_url     = report_options.fetch(:url)    { raise ArgumentError.new("url not given!") }
       @movies_uri    = URI(movies_url)
       @source_engine = report_options.fetch(:engine) { select_source(@movies_uri) || raise_invalid_engine! }
@@ -24,7 +24,7 @@ module MoviesReport
       @results = []
     end
 
-    def build!(strategy_name=:default)
+    def build!(strategy_name = :default)
       MoviesReport.logger.info "Building report (#{strategy_name}) .."
 
       @strategy = select_strategy(strategy_name)

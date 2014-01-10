@@ -24,7 +24,7 @@ module MoviesReport
     end
 
     def initialize(workers_ids)
-      @workers_ids= workers_ids
+      @workers_ids = workers_ids
     end
 
     def save
