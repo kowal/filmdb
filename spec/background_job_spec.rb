@@ -9,7 +9,7 @@ describe MoviesReport::BackgroundJob do
     job_id = @job.save
 
     expect(job_id).not_to be_nil
-    expect{ job_id = @job.save }.to change{job_id}
+    expect { job_id = @job.save }.to change{ job_id }
   end
 
   it 'find job by id' do
