@@ -63,10 +63,10 @@ module MoviesReport
 
       def create_progressbar(total)
         @progressbar = ProgressBar.create({
-          :title => "[FilmDB] Fetching stats",
-          :starting_at => 0,
-          :total => total,
-          :length => 70
+          title:       "[FilmDB] Fetching stats",
+          starting_at: 0,
+          length:      70,
+          total:       total
         })
       end
 
