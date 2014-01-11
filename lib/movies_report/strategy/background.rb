@@ -10,13 +10,15 @@ module MoviesReport
     #
     class Background < Base
 
-      # @retutn [String] worker_id ID which fetches info for given title
+      # @return [String] worker_id ID which fetches info for given title
+      #
       def each_film(title, service, service_key)
         MoviesReport::WebSearchWorker.perform_async(title, service_key)
       end
 
       # @param [Array] workers_ids
       # @return [Hash] hash with current results
+      #
       def current_result(workers_ids)
         results = {}
         stats = { started: 0, finished: 0 }
