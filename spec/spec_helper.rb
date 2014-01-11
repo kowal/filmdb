@@ -31,4 +31,15 @@ def expected_results_for_site(site)
   YAML::load(File.open("fixtures/expected/#{site}.yml"))
 end
 
+def capture_stdout(&block)
+  original_stdout = $stdout
+  $stdout = fake = StringIO.new
+  begin
+    yield
+  ensure
+    $stdout = original_stdout
+  end
+  fake.string
+end
+
 Sidekiq::Logging.logger = nil

@@ -81,6 +81,7 @@ describe MoviesReport::Report do
         stub_search_engine_results []
 
         report.build!
+
         expect(report.results).to be_empty
       end
 
@@ -123,10 +124,15 @@ describe MoviesReport::Report do
           engine: MoviesReport::Source::Chomikuj,
           url:    'http://chomikuj.pl/mocked-page'
         })
-        report.build!
-        actual_movies = report.results.map { |m| m[:title] }
 
+        actual_output = capture_stdout { report.build! }
+
+        # check movies titles
+        actual_movies = report.results.map { |m| m[:title] }
         expect(actual_movies).to include(*expected_movies)
+
+        # check output for default strategy (dots)
+        expect(actual_output).to match('.........')
       end
     end
 
