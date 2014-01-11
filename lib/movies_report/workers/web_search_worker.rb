@@ -15,6 +15,18 @@ end
 
 module MoviesReport
 
+  # Sidekiq worker class, which can
+  # - schedule job for fetching movie stats in given movies service
+  # - provide way to read status of given job
+  #
+  # @example Create job, returs job_id
+  #   WebSearchWorker.perform_async('Rocky II', :filmweb)
+  #   # => '1234'
+  #
+  # @example Read current status
+  #   data = MoviesReport::WebSearchWorker.get_worker_data('1234')
+  #   # => { 'title' => ... , 'state' => .. , [...] }
+  #
   class WebSearchWorker
     include Sidekiq::Worker
     include Sidekiq::Status::Worker

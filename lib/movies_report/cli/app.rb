@@ -8,8 +8,11 @@ module MoviesReport
     #
     class App
 
+      # How often progress-bar will be refreshed
       CLI_JOB_REFRESH_INTERVAL = 0.5
+      # Proc for formatting logger output
       CLI_LOG_FORMATTER        = proc { |_, _, _, msg| "[FilmDB] #{msg}\n" }
+      # Defualt options used for creating MoviesReport::Report
       CLI_DEFAULT_OPTIONS      = { engine: Source::Chomikuj }
 
       def self.start(argv)

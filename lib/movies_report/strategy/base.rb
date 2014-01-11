@@ -4,6 +4,10 @@ module MoviesReport
 
   module Strategy
 
+    # Base strategy for fetching movie stats.
+    #
+    # @see MoviesReport::Strategy::Simple
+    #
     class Base
 
       # @return [Array<Hash>]

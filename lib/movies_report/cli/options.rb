@@ -7,6 +7,8 @@ module MoviesReport
 
   module Cli
 
+    # Parses command-line application options.
+    #
     class Options
 
       def self.parse(args)

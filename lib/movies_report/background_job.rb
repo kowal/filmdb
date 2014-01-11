@@ -14,7 +14,9 @@ module MoviesReport
   #
   class BackgroundJob
 
+    # Provides 'storage' instance (Redis i-face)
     STORAGE = Redis.new
+
     class << self
 
       def find(job_id)

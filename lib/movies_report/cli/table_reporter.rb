@@ -6,6 +6,8 @@ module MoviesReport
 
   module Cli
 
+    # Prints movie stats as table in terminal.
+    #
     class TableReporter
 
       def initialize(movies_stats, options = {})
