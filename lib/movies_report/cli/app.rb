@@ -46,7 +46,10 @@ module MoviesReport
             save_job(report)
           end
         end
+
         print_job_results(result)
+
+        exit
       end
 
       def self.job_status(workers_ids)
@@ -77,17 +80,14 @@ module MoviesReport
       def self.print_job_results(result)
         if result.is_a?(String)
           MoviesReport.logger.info "Scheduled job => #{result}"
-          exit
-        end
-        finished = result[:status][:finished]
-        total = result[:status][:started] + finished
-        MoviesReport.logger.info "Results: #{finished}/#{total}"
-        result.delete :status
-        ap result
-      end
+        else
+          finished = result[:status][:finished]
+          total    = result[:status][:started] + finished
 
-      def self.report_in_console(movies_report)
-        TableReporter.new(movies_report.data).display
+          MoviesReport.logger.info "Results: #{finished}/#{total}"
+          result.delete :status
+          ap result
+        end
       end
 
     end
