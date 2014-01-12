@@ -39,28 +39,31 @@ module MoviesReport
       #   update_progressbar( status: { started: 40, finished: 60 } )
       #
       def update_progressbar(result)
-        unless result[:status]
-          return
-        else
-          started = result[:status][:started]
-          finished = result[:status][:finished]
+        return unless result[:status]
 
-          @pending_jobs = started.to_i > 0
-          if @pending_jobs
-            @progressbar ||= create_progressbar(started + finished)
-            valid_data = result.values[1..-1]
-            if valid_data
-              sparks_values = valid_data.map { |v| v.nan? ? 0 : (v.to_i - 4) }
-            end
-            @progressbar.format "%t [%c/%C] #{sparks(sparks_values)} %p%"
-            @progressbar.progress = finished
-          else
-            @progressbar.format ""
-            @progressbar.log("[FilmDB] Finished!")
-          end
+        started = result[:status][:started]
+        finished = result[:status][:finished]
+
+        @pending_jobs = started.to_i > 0
+        if @pending_jobs
+          @progressbar ||= create_progressbar(started + finished)
+          update_progress "%t [%c/%C] #{sparks(sparks_values(result.values))} %p%", finished
+        else
+          update_progress ""
         end
       end
 
+      # @private
+      def update_progress(message, finished_jobs = nil)
+        @progressbar.format message
+        if finished_jobs
+          @progressbar.progress = finished_jobs
+        else
+          @progressbar.log("[FilmDB] Finished!")
+        end
+      end
+
+      # @private
       def create_progressbar(total)
         @progressbar = ProgressBar.create({
           title:       "[FilmDB] Fetching stats",
@@ -68,6 +71,14 @@ module MoviesReport
           length:      70,
           total:       total
         })
+      end
+
+      # @private
+      def sparks_values(values)
+        valid_data = values[1..-1]
+        if valid_data
+          valid_data.map { |v| v.nan? ? 0 : (v.to_i - 4) }
+        end
       end
 
       # Sparks visualizaiton
