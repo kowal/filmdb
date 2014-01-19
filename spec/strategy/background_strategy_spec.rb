@@ -24,7 +24,7 @@ describe MoviesReport::Strategy::Background do
     it 'returns status count per each status' do
       results = subject.current_result([1, 2, 5, 10, 20, 50])
 
-      expect(results).to include(:status => { :started => 2, :finished => 4 })
+      expect(results).to include(:status => { started: 2, finished: 4 })
     end
 
     it 'returns empty hash when state is blank' do

@@ -46,9 +46,9 @@ module MoviesReport
       end
 
       def average_rating(ratings)
-        avg = ratings.values.compact
-          .reduce{ |sum, el| sum + el }.to_f / ratings.size
-        rating_cell(avg)
+        total = ratings.values.compact
+          .reduce { |sum, el| sum + el }.to_f
+        rating_cell(total / ratings.size)
       end
 
       def valid_rating?(rating)

@@ -5,12 +5,12 @@ require 'spec_helper'
 describe MoviesReport::Cli::TableReporter do
 
   let(:report) do
-    [ { title: 'A', ratings: { a: nil,   b: nil   } },
-      { title: 'B', ratings: { a: nil,   b: '8.0' } },
-      { title: 'C', ratings: { a: '',    b: ''    } },
-      { title: 'D', ratings: { a: '',    b: '8.0' } },
-      { title: 'E', ratings: { a: '9.0', b: '1.0' } },
-      { title: 'F', ratings: { a: '6.5', b: '5.0' } } ]
+    [{ title: 'A', ratings: { a: nil,   b: nil   } },
+     { title: 'B', ratings: { a: nil,   b: '8.0' } },
+     { title: 'C', ratings: { a: '',    b: ''    } },
+     { title: 'D', ratings: { a: '',    b: '8.0' } },
+     { title: 'E', ratings: { a: '9.0', b: '1.0' } },
+     { title: 'F', ratings: { a: '6.5', b: '5.0' } }]
   end
 
   let(:subject) { MoviesReport::Cli::TableReporter.new(report, colorize: false) }

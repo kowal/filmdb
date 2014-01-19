@@ -38,7 +38,7 @@ module MoviesReport
     private
 
     def next_job_id
-      STORAGE.incr "movies-report-last-job"
+      STORAGE.incr 'movies-report-last-job'
     end
     
   end

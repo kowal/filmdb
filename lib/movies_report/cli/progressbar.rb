@@ -49,7 +49,7 @@ module MoviesReport
           @progressbar ||= create_progressbar(started + finished)
           update_progress "%t [%c/%C] #{sparks(sparks_values(result.values))} %p%", finished
         else
-          update_progress ""
+          update_progress ''
         end
       end
 
@@ -59,14 +59,14 @@ module MoviesReport
         if finished_jobs
           @progressbar.progress = finished_jobs
         else
-          @progressbar.log("[FilmDB] Finished!")
+          @progressbar.log('[FilmDB] Finished!')
         end
       end
 
       # @private
       def create_progressbar(total)
         @progressbar = ProgressBar.create({
-          title:       "[FilmDB] Fetching stats",
+          title:       '[FilmDB] Fetching stats',
           starting_at: 0,
           length:      70,
           total:       total
@@ -76,9 +76,7 @@ module MoviesReport
       # @private
       def sparks_values(values)
         valid_data = values[1..-1]
-        if valid_data
-          valid_data.map { |v| v.nan? ? 0 : (v.to_i - 4) }
-        end
+        valid_data.map { |v| v.nan? ? 0 : (v.to_i - 4) } if valid_data
       end
 
       # Sparks visualizaiton

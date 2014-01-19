@@ -86,9 +86,11 @@ module MoviesReport
         end
 
         def get_rating
-          if @data['rating'] && @data['rating'] != '' && @data['rating'] != '0.0'
-            Float(@data['rating'])
-          end
+          Float(@data['rating']) if valid_rating?(@data['rating'])
+        end
+
+        def valid_rating?(rating)
+          rating && rating != '' && rating != '0.0'
         end
 
       end
