@@ -3,7 +3,7 @@
 module MoviesReport
 
   # Stores/reads Sidekiq workers IDs
-  # 
+  #
   # Store
   #   job = BackgroundJob.new [ '732939232', '9688471622', ... ]
   #   job.save # => '15'
@@ -40,6 +40,6 @@ module MoviesReport
     def next_job_id
       STORAGE.incr 'movies-report-last-job'
     end
-    
+
   end
 end

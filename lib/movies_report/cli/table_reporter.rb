@@ -16,7 +16,7 @@ module MoviesReport
       end
 
       def display
-        puts table_structure
+        $stdout.puts table_structure
       end
 
       def table_structure

@@ -55,10 +55,9 @@ module MoviesReport
         end
 
         def add_rating(title, rating)
-          @results[title] ||= []
-          if rating
-            @results[title] << rating
-          end
+          return unless rating
+
+          (@results[title] ||= []) << rating
         end
 
         def calculate_ratings

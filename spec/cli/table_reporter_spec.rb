@@ -50,7 +50,7 @@ describe MoviesReport::Cli::TableReporter do
 
     it 'displays table structure' do
       subject.expects(:table_structure)
-      subject.expects(:puts).with(anything)
+      $stdout.expects(:puts).with(anything)
 
       subject.display
     end
