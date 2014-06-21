@@ -14,9 +14,10 @@ require 'fakeredis'
 require 'movies_report'
 require 'vcr'
 
+require 'rspec/collection_matchers'
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.order = 'random'
   config.mock_framework = :mocha
   config.project_tracker_url = 'https://mkowalcze.kanbanery.com/projects/32672/board/tasks/%s'
