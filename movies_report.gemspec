@@ -30,6 +30,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "rspec-collection_matchers"
+  gem.add_development_dependency "rspec-legacy_formatters"
   gem.add_development_dependency "guard-rspec"
   gem.add_development_dependency "libnotify"
   gem.add_development_dependency "mocha"
@@ -42,6 +43,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rack"
   gem.add_development_dependency "sinatra"
   gem.add_development_dependency "slim"
+  gem.add_development_dependency "metric_fu"
   gem.add_development_dependency "yard"
-  gem.add_development_dependency "rvm-tester"
+  gem.add_development_dependency "yield"
+  gem.add_development_dependency "foreman"
 end
