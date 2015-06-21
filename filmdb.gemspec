@@ -2,30 +2,33 @@
 lib = File.expand_path('../lib', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
+require 'rake'
 require 'filmdb/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "filmdb"
   gem.version       = FilmDb::VERSION
+  gem.platform      = Gem::Platform::CURRENT
   gem.authors       = ["Marek Kowalcze"]
   gem.email         = ["marek.kowalcze@gmail.com"]
-  gem.description   = %q{Movie report tool.}
-  gem.summary       = %q{Simple tool for building movie report from multiple sources.}
-  gem.homepage      = ""
+  gem.description   = %q{Film Database.}
+  gem.summary       = %q{Film DB. API & CLI for building movies reports based on multiple sources.}
+  gem.homepage      = "https://github.com/kowal/filmdb"
+  gem.license       = 'MIT'
 
-  gem.files         = `git ls-files`.split($/)
+  gem.files         = FileList['lib/**/*.rb', 'bin/*'].to_a
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.require_paths = ["lib"]
+  # gem.require_paths = ["lib"]
 
-  gem.add_dependency "nokogiri", [">= 1.3.3"]
-  gem.add_dependency "imdb"
-  gem.add_dependency "awesome_print", [">= 1.1.0"]
-  gem.add_dependency "terminal-table"
-  gem.add_dependency "redis"
-  gem.add_dependency "sidekiq"
-  gem.add_dependency "sidekiq-status"
-  gem.add_dependency "ruby-progressbar"
+  gem.add_dependency "nokogiri", ">= 1.3.3"
+  gem.add_dependency "imdb", "0.8.2"
+  gem.add_dependency "awesome_print", "1.1.0"
+  gem.add_dependency "terminal-table", "1.4.5"
+  gem.add_dependency "redis", "3.2.1"
+  gem.add_dependency "sidekiq", "3.3.4"
+  gem.add_dependency "sidekiq-status", "0.5.3"
+  gem.add_dependency "ruby-progressbar", "1.7.5"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
