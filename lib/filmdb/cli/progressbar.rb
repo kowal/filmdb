@@ -45,8 +45,8 @@ module FilmDb
         finished = result[:status][:finished]
 
         @pending_jobs = started.to_i > 0
+        @progressbar ||= create_progressbar(started + finished)
         if @pending_jobs
-          @progressbar ||= create_progressbar(started + finished)
           update_progress "%t [%c/%C] #{sparks(sparks_values(result.values))} %p%", finished
         else
           update_progress ''
