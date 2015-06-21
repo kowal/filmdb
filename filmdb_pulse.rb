@@ -2,10 +2,12 @@
 
 require File.expand_path("../pulse/lib/pulse", __FILE__)
 
+current_git_branch = `git rev-parse --abbrev-ref HEAD`.chop
+
 page = Pulse::Page.define do |c|
   c.project  = 'Film DB'
   c.github   = 'kowal/filmdb'
-  c.branch   = 'add-sidekiq' # `git rev-parse --abbrev-ref HEAD`.chop
+  c.branch   = current_git_branch
   c.badges   = [
     # built-in:
     :travis,
@@ -16,8 +18,8 @@ page = Pulse::Page.define do |c|
     # custom:
     [
       'CodeShip',
-      'https://www.codeship.io/projects/4462',
-      'https://www.codeship.io/projects/6b44c0d0-a7cb-0131-488a-1a410b9a7696/status?branch=master'
+      'https://www.codeship.io/projects/19056',
+      "https://www.codeship.io/projects/6b44c0d0-a7cb-0131-488a-1a410b9a7696/status?branch=#{current_git_branch}"
     ]
   ]
   c.specs    = 'specs.html'
