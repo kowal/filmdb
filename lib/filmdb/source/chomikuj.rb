@@ -101,7 +101,7 @@ module FilmDb
         --oryginalny --orginalny orginalny
         .pl PL IVO(1).avi ivo IVO Ivo 2012.PL dubbing.pl.avi Dubbing
         chomikuj Chomikuj.avi .avi -- .--cam cam.avi ==
-        .rmvb DVDrip.rmvb Rmvb
+        .rmvb DVDrip.rmvb Rmvb \.\.\. \s\[
       }
 
       def self.clean(str)
