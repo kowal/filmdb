@@ -1,1 +1,0 @@
-require './lib/movies_report/workers/web_search_worker'

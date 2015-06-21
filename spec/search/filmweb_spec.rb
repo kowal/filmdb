@@ -2,13 +2,13 @@
 
 require 'spec_helper'
 
-describe MoviesReport::Search::Filmweb do
+describe FilmDb::Search::Filmweb do
 
   let(:fake_service) { mock() }
   let(:movie_title) { 'Some Good Movie' }
 
   let(:filmweb_search) do
-    MoviesReport::Search::Filmweb.new(movie_title, fake_service)
+    FilmDb::Search::Filmweb.new(movie_title, fake_service)
   end
 
   context '#rating' do

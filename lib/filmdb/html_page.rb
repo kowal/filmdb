@@ -5,7 +5,7 @@ require 'awesome_print'
 require 'net/http'
 require 'uri'
 
-module MoviesReport
+module FilmDb
 
   # HtmlPage
   # - fetches html page

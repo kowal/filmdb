@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-describe MoviesReport::HtmlPage do
+describe FilmDb::HtmlPage do
 
-  subject(:page) { MoviesReport::HtmlPage.new(URI('http://google.pl')) }
+  subject(:page) { FilmDb::HtmlPage.new(URI('http://google.pl')) }
 
   # see https://github.com/sparklemotion/nokogiri/blob/master/lib/nokogiri/html/document.rb
   # 
@@ -17,7 +17,7 @@ describe MoviesReport::HtmlPage do
 
     it 'not fail when URL is given' do
       with_expected_http_response do |expected_response_body|
-        page = MoviesReport::HtmlPage.new('http://google.pl')
+        page = FilmDb::HtmlPage.new('http://google.pl')
         expect(page.document.inner_html.downcase.gsub(/\s+/, '')).to eq(expected_response_body.downcase)
       end
     end

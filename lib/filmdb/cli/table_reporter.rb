@@ -2,7 +2,7 @@
 
 require 'terminal-table'
 
-module MoviesReport
+module FilmDb
 
   module Cli
 

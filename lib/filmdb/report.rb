@@ -1,6 +1,6 @@
 # coding: utf-8
 
-module MoviesReport
+module FilmDb
 
   # Report:
   # - takes movies data source class
@@ -25,7 +25,7 @@ module MoviesReport
     end
 
     def build!(strategy_name = :default)
-      MoviesReport.logger.info "Building report (#{strategy_name}) .."
+      FilmDb.logger.info "Building report (#{strategy_name}) .."
 
       @strategy = select_strategy(strategy_name)
       movies_results = extract_movie_list
@@ -37,12 +37,12 @@ module MoviesReport
     end
 
     def select_strategy(strategy)
-      MoviesReport.strategies[strategy].new
+      FilmDb.strategies[strategy].new
     end
 
     def select_source(movies_url)
       source_host = movies_url.hostname
-      MoviesReport.sources[source_host]
+      FilmDb.sources[source_host]
     end
 
     def workers_ids

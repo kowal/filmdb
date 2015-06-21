@@ -2,7 +2,7 @@
 
 require 'uri'
 
-module MoviesReport
+module FilmDb
 
   class << self
 
@@ -10,7 +10,7 @@ module MoviesReport
 
     # Simple config helper
     #
-    # MoviesReport.configure do |config|
+    # FilmDb.configure do |config|
     #   config.foo = 'bar'
     # end
     #

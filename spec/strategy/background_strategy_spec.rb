@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe MoviesReport::Strategy::Background do
+describe FilmDb::Strategy::Background do
 
   context '#current_result' do
 
@@ -36,7 +36,7 @@ describe MoviesReport::Strategy::Background do
   end
 
   def stub_film_rating(worker_id, results)
-    MoviesReport::WebSearchWorker
+    FilmDb::WebSearchWorker
       .stubs(:get_worker_data)
       .with(worker_id)
       .returns(results)

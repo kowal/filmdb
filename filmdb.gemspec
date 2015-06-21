@@ -2,11 +2,11 @@
 lib = File.expand_path('../lib', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'movies_report/version'
+require 'filmdb/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "movies_report"
-  gem.version       = MoviesReport::VERSION
+  gem.name          = "filmdb"
+  gem.version       = FilmDb::VERSION
   gem.authors       = ["Marek Kowalcze"]
   gem.email         = ["marek.kowalcze@gmail.com"]
   gem.description   = %q{Movie report tool.}

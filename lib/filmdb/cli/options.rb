@@ -3,7 +3,7 @@
 require 'optparse'
 require 'ostruct'
 
-module MoviesReport
+module FilmDb
 
   module Cli
 

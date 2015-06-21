@@ -2,13 +2,13 @@
 
 require 'spec_helper'
 
-describe MoviesReport::Report do
+describe FilmDb::Report do
 
   # fake registered source
   class FakeSearchEngine
     def initialize(url) end
   end
-  MoviesReport.register_source 'http://fake-search-engine.com', FakeSearchEngine
+  FilmDb.register_source 'http://fake-search-engine.com', FakeSearchEngine
 
   # fake unregistered source
   class GreateMoviesSource
@@ -28,24 +28,24 @@ describe MoviesReport::Report do
   context 'create' do
 
     it 'requires url' do
-      expect { MoviesReport::Report.new({}) }.to raise_error ArgumentError
+      expect { FilmDb::Report.new({}) }.to raise_error ArgumentError
     end
 
     it 'recognizes registered source' do
-      MoviesReport.register_source 'http://greatmovies.pl', GreateMoviesSource
-      report = MoviesReport::Report.new url: 'http://greatmovies.pl/latest/movies'
+      FilmDb.register_source 'http://greatmovies.pl', GreateMoviesSource
+      report = FilmDb::Report.new url: 'http://greatmovies.pl/latest/movies'
 
       expect(report.movies_source).to be_instance_of(GreateMoviesSource)
     end
 
     it 'fails when non-registered source is used' do
       expect {
-        MoviesReport::Report.new url: 'www.this.wasnt.registered.com/latest/movies'
+        FilmDb::Report.new url: 'www.this.wasnt.registered.com/latest/movies'
       }.to raise_error ArgumentError
     end
 
     it 'allows to provide custom source' do
-      report = MoviesReport::Report.new url: 'www.foo2000.com/latest/movies', engine: FooSource
+      report = FilmDb::Report.new url: 'www.foo2000.com/latest/movies', engine: FooSource
 
       expect(report.movies_source).to be_instance_of(FooSource)
     end
@@ -54,7 +54,7 @@ describe MoviesReport::Report do
 
   context 'build' do
 
-    subject(:report) { MoviesReport::Report.new url: movies_url, engine: search_engine_klass }
+    subject(:report) { FilmDb::Report.new url: movies_url, engine: search_engine_klass }
     let(:search_results) { [{ title: :search_engine_results }] }
 
     context 'with default strategy' do
@@ -88,7 +88,7 @@ describe MoviesReport::Report do
       it 'raises BuildError on any exception' do
         report.stubs(:extract_movie_list).raises(StandardError)
 
-        expect { report.build! }.to raise_error MoviesReport::Report::BuildError
+        expect { report.build! }.to raise_error FilmDb::Report::BuildError
       end
      
     end
@@ -97,7 +97,7 @@ describe MoviesReport::Report do
 
       it 'should use chosen strategy' do
         stub_search_engine_results search_results
-        MoviesReport.configure do |config|
+        FilmDb.configure do |config|
           config.register_strategy :foo_strategy, FooStrategy
         end
 
@@ -120,8 +120,8 @@ describe MoviesReport::Report do
       VCR.use_cassette('chomikuj', record: :new_episodes) do
         expected_movies = expected_results_for_site('chomikuj')
 
-        report = MoviesReport::Report.new({
-          engine: MoviesReport::Source::Chomikuj,
+        report = FilmDb::Report.new({
+          engine: FilmDb::Source::Chomikuj,
           url:    'http://chomikuj.pl/mocked-page'
         })
 
@@ -146,5 +146,5 @@ def stub_search_engine_results(data)
 end
 
 def stub_strategy_run(strategy)
-  MoviesReport.strategies[strategy].any_instance.expects(:run)
+  FilmDb.strategies[strategy].any_instance.expects(:run)
 end

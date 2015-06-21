@@ -1,10 +1,10 @@
 # coding: utf-8
 
-module MoviesReport
+module FilmDb
 
   module Cli
 
-    # Command Line i-face for MoviesReport
+    # Command Line i-face for FilmDb
     #
     class App
 
@@ -12,7 +12,7 @@ module MoviesReport
       CLI_JOB_REFRESH_INTERVAL = 0.5
       # Proc for formatting logger output
       CLI_LOG_FORMATTER        = proc { |_, _, _, msg| "[FilmDB] #{msg}\n" }
-      # Defualt options used for creating MoviesReport::Report
+      # Defualt options used for creating FilmDb::Report
       CLI_DEFAULT_OPTIONS      = { engine: Source::Chomikuj }
 
       def self.start(argv)
@@ -23,8 +23,8 @@ module MoviesReport
 
       def self.setup_logging
         Sidekiq::Logging.logger = nil
-        MoviesReport.logger.level = Logger::INFO
-        MoviesReport.logger.formatter = CLI_LOG_FORMATTER
+        FilmDb.logger.level = Logger::INFO
+        FilmDb.logger.formatter = CLI_LOG_FORMATTER
       end
 
       def self.parse_options(argv)
@@ -79,12 +79,12 @@ module MoviesReport
 
       def self.print_job_results(result)
         if result.is_a?(String)
-          MoviesReport.logger.info "Scheduled job => #{result}"
+          FilmDb.logger.info "Scheduled job => #{result}"
         else
           finished = result[:status][:finished]
           total    = result[:status][:started] + finished
 
-          MoviesReport.logger.info "Results: #{finished}/#{total}"
+          FilmDb.logger.info "Results: #{finished}/#{total}"
           result.delete :status
           ap result
         end

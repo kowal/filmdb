@@ -2,7 +2,7 @@
 
 require 'timeout'
 
-module MoviesReport
+module FilmDb
 
   module Cli
 

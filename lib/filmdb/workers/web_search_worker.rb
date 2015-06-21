@@ -2,18 +2,18 @@
 
 require 'awesome_print'
 require 'imdb'
-require 'movies_report/config'
-require 'movies_report/search/filmweb'
-require 'movies_report/search/imdb'
+require 'filmdb/config'
+require 'filmdb/search/filmweb'
+require 'filmdb/search/imdb'
 require 'sidekiq'
 require 'sidekiq-status'
 
-MoviesReport.configure do |config|
-  config.register_service :filmweb, MoviesReport::Search::Filmweb
-  config.register_service :imdb, MoviesReport::Search::IMDB
+FilmDb.configure do |config|
+  config.register_service :filmweb, FilmDb::Search::Filmweb
+  config.register_service :imdb, FilmDb::Search::IMDB
 end
 
-module MoviesReport
+module FilmDb
 
   # Sidekiq worker class, which can
   # - schedule job for fetching movie stats in given movies service
@@ -24,7 +24,7 @@ module MoviesReport
   #   # => '1234'
   #
   # @example Read current status
-  #   data = MoviesReport::WebSearchWorker.get_worker_data('1234')
+  #   data = FilmDb::WebSearchWorker.get_worker_data('1234')
   #   # => { 'title' => ... , 'state' => .. , [...] }
   #
   class WebSearchWorker
@@ -38,7 +38,7 @@ module MoviesReport
 
       store state: 'started'
       logger.debug { "[Job] : '#{title}'" }
-      search_result = MoviesReport.services[service.to_sym].new(title)
+      search_result = FilmDb.services[service.to_sym].new(title)
 
       store title: title
       store rating: search_result.rating

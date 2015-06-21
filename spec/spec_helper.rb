@@ -11,7 +11,7 @@ else
 end
 
 require 'fakeredis'
-require 'movies_report'
+require 'filmdb'
 require 'vcr'
 
 require 'rspec/collection_matchers'

@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe MoviesReport::Cli::TableReporter do
+describe FilmDb::Cli::TableReporter do
 
   let(:report) do
     [{ title: 'A', ratings: { a: nil,   b: nil   } },
@@ -13,7 +13,7 @@ describe MoviesReport::Cli::TableReporter do
      { title: 'F', ratings: { a: '6.5', b: '5.0' } }]
   end
 
-  let(:subject) { MoviesReport::Cli::TableReporter.new(report, colorize: false) }
+  let(:subject) { FilmDb::Cli::TableReporter.new(report, colorize: false) }
 
   context '#table_structure' do
 

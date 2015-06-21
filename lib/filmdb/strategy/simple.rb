@@ -1,6 +1,6 @@
 # coding: utf-8
 
-module MoviesReport
+module FilmDb
 
   module Strategy
 

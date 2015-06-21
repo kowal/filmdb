@@ -1,6 +1,6 @@
 # coding: utf-8
 
-module MoviesReport
+module FilmDb
 
   module Source
 
@@ -13,7 +13,7 @@ module MoviesReport
     class Chomikuj
 
       def initialize(uri)
-        MoviesReport.logger.info 'Fetching page ..'
+        FilmDb.logger.info 'Fetching page ..'
         @document  = HtmlPage.new(uri).document
         @page      = create_page
       end

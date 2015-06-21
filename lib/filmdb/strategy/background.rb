@@ -1,19 +1,19 @@
 # coding: utf-8
 
-module MoviesReport
+module FilmDb
 
   module Strategy
 
     # Strategy for retrieving movies stats in background (none-blocking)
     #
-    # Uses MoviesReport::WebSearchWorker internally.
+    # Uses FilmDb::WebSearchWorker internally.
     #
     class Background < Base
 
       # @return [String] worker_id ID which fetches info for given title
       #
       def each_film(title, service, service_key)
-        MoviesReport::WebSearchWorker.perform_async(title, service_key)
+        FilmDb::WebSearchWorker.perform_async(title, service_key)
       end
 
       # @param [Array] workers_ids
@@ -39,7 +39,7 @@ module MoviesReport
       end
 
       def read_worker_data(worker_id)
-        MoviesReport::WebSearchWorker.get_worker_data(worker_id)
+        FilmDb::WebSearchWorker.get_worker_data(worker_id)
       end
 
       # @private

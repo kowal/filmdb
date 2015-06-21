@@ -1,9 +1,9 @@
 # coding: utf-8
 
 require 'uri'
-require 'movies_report/html_page'
+require 'filmdb/html_page'
 
-module MoviesReport
+module FilmDb
 
   module Search
 

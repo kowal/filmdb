@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-describe MoviesReport::Source::ChomikujSanitizer do
+describe FilmDb::Source::ChomikujSanitizer do
 
-  subject(:sanitizer) { MoviesReport::Source::ChomikujSanitizer }
+  subject(:sanitizer) { FilmDb::Source::ChomikujSanitizer }
 
   context '#clean', req: '959098' do
 
