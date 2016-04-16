@@ -1,7 +1,7 @@
 language: ruby
 rvm:
   - 2.3.0
-  - jruby-1.7.15
+  - jruby-1.7.23
 script: bundle exec rspec spec
 notifications:
   email:
