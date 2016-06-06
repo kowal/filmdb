@@ -1,7 +1,6 @@
 # coding: utf-8
 
 module FilmDb
-
   # Report:
   # - takes movies data source class
   # - for each movie from data source, create rankings
@@ -9,7 +8,6 @@ module FilmDb
   # TODO: rename to FilmDB::Query
   #
   class Report
-
     class BuildError < StandardError; end
 
     attr_reader :results, :strategy, :movies_source
@@ -17,7 +15,7 @@ module FilmDb
     # TODO: rename :engine -> movies_source
     #
     def initialize(report_options = {})
-      movies_url     = report_options.fetch(:url)    { raise ArgumentError.new("url not given!") }
+      movies_url     = report_options.fetch(:url) { raise ArgumentError, 'url not given!' }
       @movies_uri    = URI(movies_url)
       @source_engine = report_options.fetch(:engine) { select_source(@movies_uri) || raise_invalid_engine! }
       @movies_source = @source_engine.new(@movies_uri)
@@ -60,9 +58,7 @@ module FilmDb
     end
 
     def raise_invalid_engine!
-      raise ArgumentError.new("engine not given or not registered for current url (#{@movies_uri})")
+      raise ArgumentError, "engine not given or not registered for current url (#{@movies_uri})"
     end
-
   end
-
 end

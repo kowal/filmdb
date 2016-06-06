@@ -1,6 +1,6 @@
 # coding: utf-8
 
-REPORT_HEADER = <<-HTML
+REPORT_HEADER = <<-HTML.freeze
 <div class="rspec-report container">
   <div id="rspec-header">
     <div id="label">
@@ -14,11 +14,11 @@ REPORT_HEADER = <<-HTML
 <div class="results">
 HTML
 
-GLOBAL_SCRIPTS = <<-EOF
+GLOBAL_SCRIPTS = <<-EOF.freeze
 
 EOF
 
-GLOBAL_STYLES = <<-CSS
+GLOBAL_STYLES = <<-CSS.freeze
 
 #rspec-header {
   height: 4em;
@@ -169,7 +169,7 @@ a {
 }
 CSS
 
-HTML_HEADER = <<-HTML
+HTML_HEADER = <<-HTML.freeze
 <!DOCTYPE html>
 <html lang="en">
 <head>

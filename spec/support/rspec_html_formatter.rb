@@ -12,7 +12,6 @@ RSpec.configure do |c|
 end
 
 class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
-
   def initialize(output)
     super(output)
     @project_tracker_url = RSpec.configuration.project_tracker_url
@@ -20,7 +19,7 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
     ensure_valid_config!
   end
 
-  def start(example_count)
+  def start(_example_count)
     @output.puts HTML_HEADER
     @output.puts REPORT_HEADER
   end
@@ -34,7 +33,7 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
     @printer.flush
   end
 
-  def dump_summary(duration, example_count, failure_count, pending_count)
+  def dump_summary(_duration, example_count, _failure_count, _pending_count)
     insert_html '#totals', "Sumary. Example_count : #{example_count}"
 
     @printer.flush
@@ -44,9 +43,7 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
     @example_group_red = false
     @example_group_number += 1
 
-    if example_group_number != 1
-      @printer.print_example_group_end
-    end
+    @printer.print_example_group_end if example_group_number != 1
     @printer.print_example_group_start(example_group_number, example_group.description, example_group.parent_groups.size)
     @output.puts "<div class='indent level#{example_group.parent_groups.size}'></div>"
     @printer.flush
@@ -59,7 +56,7 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
   private
 
   def formatted_example_run_time(example)
-     sprintf("%.5f", example.execution_result[:run_time])
+    sprintf('%.5f', example.execution_result[:run_time])
   end
 
   def requirements_links(example)

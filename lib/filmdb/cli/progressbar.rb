@@ -3,13 +3,10 @@
 require 'timeout'
 
 module FilmDb
-
   module Cli
-
     # Simple CLI progress-bar build around 'Sparks' visualizaiton.
     #
     class Progressbar
-
       attr_reader :result, :progressbar
 
       def initialize(timeout_in_seconds)
@@ -19,11 +16,11 @@ module FilmDb
         @pending_jobs = true
       end
 
-      def for_each_step(&block)
+      def for_each_step
         while @pending_jobs
           begin
-            Timeout::timeout(@timeout_in_seconds) do
-              @result = block.call
+            Timeout.timeout(@timeout_in_seconds) do
+              @result = yield
               update_progressbar(@result)
             end
           rescue Timeout::Error
@@ -65,12 +62,10 @@ module FilmDb
 
       # @private
       def create_progressbar(total)
-        @progressbar = ProgressBar.create({
-          title:       '[FilmDB] Fetching stats',
-          starting_at: 0,
-          length:      70,
-          total:       total
-        })
+        @progressbar = ProgressBar.create(title:       '[FilmDB] Fetching stats',
+                                          starting_at: 0,
+                                          length:      70,
+                                          total:       total)
       end
 
       # @private
@@ -83,16 +78,17 @@ module FilmDb
       # Taken from https://gist.github.com/jcromartie/1367091
       #
       def sparks(values)
-        @ticks = %w[▁ ▂ ▃ ▄ ▅ ▆ ▇]
-        values = values.map { |x| x.to_f }
-        min, range, scale = values.min, values.max - values.min, @ticks.length - 1
+        @ticks = %w(▁ ▂ ▃ ▄ ▅ ▆ ▇)
+        values = values.map(&:to_f)
+        min = values.min
+        range = values.max - values.min
+        scale = @ticks.length - 1
         if !(range == 0)
           values.map { |x| @ticks[(((x - min) / range) * scale).round] }.join
         else
-          values.map { |x| @ticks[1] }.join
+          values.map { |_x| @ticks[1] }.join
         end
       end
-
     end
   end
 end

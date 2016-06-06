@@ -6,7 +6,6 @@ require 'net/http'
 require 'uri'
 
 module FilmDb
-
   # HtmlPage
   # - fetches html page
   # - uses Nokogiri, Net:HTTP
@@ -23,5 +22,4 @@ module FilmDb
       nil
     end
   end
-
 end

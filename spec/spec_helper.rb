@@ -29,10 +29,10 @@ VCR.configure do |config|
 end
 
 def expected_results_for_site(site)
-  YAML::load(File.open("fixtures/expected/#{site}.yml"))
+  YAML.load(File.open("fixtures/expected/#{site}.yml"))
 end
 
-def capture_stdout(&block)
+def capture_stdout
   original_stdout = $stdout
   $stdout = fake = StringIO.new
   begin

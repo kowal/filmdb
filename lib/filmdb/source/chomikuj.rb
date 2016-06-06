@@ -1,9 +1,7 @@
 # coding: utf-8
 
 module FilmDb
-
   module Source
-
     # Source::Chomikuj
     # - takes service specific uri
     # - finds all movies information on given service page
@@ -11,7 +9,6 @@ module FilmDb
     #   with their page-specific properties
     #
     class Chomikuj
-
       def initialize(uri)
         FilmDb.logger.info 'Fetching page ..'
         @document  = HtmlPage.new(uri).document
@@ -29,7 +26,7 @@ module FilmDb
         end
       end
 
-      def each_movie(&block)
+      def each_movie
         all_movies.map { |m| yield(m) }
       end
 
@@ -42,11 +39,9 @@ module FilmDb
           FolderListPage.new
         end
       end
-
     end
 
     module ChomikujPage
-
       def sanitize_title(original_title)
         ChomikujSanitizer.clean(original_title)
       end
@@ -54,7 +49,6 @@ module FilmDb
       def find_first(element, selector)
         element.css(selector).first.content.strip
       end
-
     end
 
     class FolderListPage
@@ -86,7 +80,6 @@ module FilmDb
 
     # TODO: rename (and move from here) to MovieTitleSanitizer
     class ChomikujSanitizer
-
       TO_REMOVE = %w{
         .BRRiP MX PL.DVDRiP.XviD.AC3-PBWT PL.DVDRiP.XViD-J25
         DVDRip.XviD-LEKTOR HDRip.XviD-LEKTOR PL.PDTV.XViD-Zet -max184
@@ -102,16 +95,15 @@ module FilmDb
         .pl PL IVO(1).avi ivo IVO Ivo 2012.PL dubbing.pl.avi Dubbing
         chomikuj Chomikuj.avi .avi -- .--cam cam.avi ==
         .rmvb DVDrip.rmvb Rmvb \.\.\. \s\[
-      }
+      }.freeze
 
       def self.clean(str)
-        raise ArgumentError.new('String to sanitize not given!') if str.nil?
+        raise ArgumentError, 'String to sanitize not given!' if str.nil?
 
         str.gsub(/#{TO_REMOVE.join('|')}/, '')
-          .gsub(/[-\s\.]+$|20\d\d.*$|\(.*\d+.*\).*/, '')
-          .strip
+           .gsub(/[-\s\.]+$|20\d\d.*$|\(.*\d+.*\).*/, '')
+           .strip
       end
     end
-
   end
 end

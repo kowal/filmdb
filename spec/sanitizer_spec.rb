@@ -3,13 +3,10 @@
 require 'spec_helper'
 
 describe FilmDb::Source::ChomikujSanitizer do
-
   subject(:sanitizer) { FilmDb::Source::ChomikujSanitizer }
 
   context '#clean', req: '959098' do
-
     context 'with invalid input' do
-
       it 'requires  title', req: '959098' do
         expect { sanitizer.clean(nil) }.to raise_error ArgumentError
       end
@@ -17,11 +14,9 @@ describe FilmDb::Source::ChomikujSanitizer do
       it 'not fail on blank title', req: '959098' do
         expect(sanitizer.clean('')).to eq('')
       end
-
     end
 
     context 'with real examples' do
-
       let(:expected_titles) do
         YAML.load(File.open('fixtures/sanitizer/chomikuj.yml'))
       end
@@ -37,8 +32,6 @@ describe FilmDb::Source::ChomikujSanitizer do
           expect(sanitizer.clean(original_title)).to eq(expected_title)
         end
       end
-
     end
-
   end
 end

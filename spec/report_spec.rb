@@ -3,7 +3,6 @@
 require 'spec_helper'
 
 describe FilmDb::Report do
-
   # fake registered source
   class FakeSearchEngine
     def initialize(url) end
@@ -26,39 +25,35 @@ describe FilmDb::Report do
   let(:search_engine_klass) { FakeSearchEngine }
 
   context 'create' do
-
     it 'requires url' do
-      expect { FilmDb::Report.new({}) }.to raise_error ArgumentError
+      expect { described_class.new({}) }.to raise_error ArgumentError
     end
 
     it 'recognizes registered source' do
       FilmDb.register_source 'http://greatmovies.pl', GreateMoviesSource
-      report = FilmDb::Report.new url: 'http://greatmovies.pl/latest/movies'
+      report = described_class.new url: 'http://greatmovies.pl/latest/movies'
 
       expect(report.movies_source).to be_instance_of(GreateMoviesSource)
     end
 
     it 'fails when non-registered source is used' do
-      expect {
-        FilmDb::Report.new url: 'www.this.wasnt.registered.com/latest/movies'
-      }.to raise_error ArgumentError
+      expect do
+        described_class.new url: 'www.this.wasnt.registered.com/latest/movies'
+      end.to raise_error ArgumentError
     end
 
     it 'allows to provide custom source' do
-      report = FilmDb::Report.new url: 'www.foo2000.com/latest/movies', engine: FooSource
+      report = described_class.new url: 'www.foo2000.com/latest/movies', engine: FooSource
 
       expect(report.movies_source).to be_instance_of(FooSource)
     end
-
   end
 
   context 'build' do
-
-    subject(:report) { FilmDb::Report.new url: movies_url, engine: search_engine_klass }
+    subject(:report) { described_class.new url: movies_url, engine: search_engine_klass }
     let(:search_results) { [{ title: :search_engine_results }] }
 
     context 'with default strategy' do
-
       it 'returns results from current strategy' do
         # stub some 'search results'
         stub_search_engine_results(search_results)
@@ -69,7 +64,6 @@ describe FilmDb::Report do
           .returns([:strategy_results])
 
         report.build!
-
         expect(report.results).to eq([:strategy_results])
       end
 
@@ -81,26 +75,25 @@ describe FilmDb::Report do
         stub_search_engine_results []
 
         report.build!
-
         expect(report.results).to be_empty
       end
 
       it 'raises BuildError on any exception' do
         report.stubs(:extract_movie_list).raises(StandardError)
 
-        expect { report.build! }.to raise_error FilmDb::Report::BuildError
+        expect { report.build! }.to raise_error described_class::BuildError
       end
-     
     end
 
     context 'with custom strategy' do
-
-      it 'should use chosen strategy' do
+      before do
         stub_search_engine_results search_results
         FilmDb.configure do |config|
           config.register_strategy :foo_strategy, FooStrategy
         end
+      end
 
+      it 'uses chosen strategy' do
         stub_strategy_run(:foo_strategy)
           .with(search_results)
           .returns('foo')
@@ -108,22 +101,16 @@ describe FilmDb::Report do
         report.build! :foo_strategy
         expect(report.results).to eq('foo')
       end
-
     end
-
   end
 
   context 'run on real page' do
-
     it 'finds all movies included in the page', req: '958909' do
-
       VCR.use_cassette('chomikuj', record: :new_episodes) do
         expected_movies = expected_results_for_site('chomikuj')
 
-        report = FilmDb::Report.new({
-          engine: FilmDb::Source::Chomikuj,
-          url:    'http://chomikuj.pl/mocked-page'
-        })
+        report = described_class.new(engine: FilmDb::Source::Chomikuj,
+                                     url:    'http://chomikuj.pl/mocked-page')
 
         actual_output = capture_stdout { report.build! }
 
@@ -135,9 +122,7 @@ describe FilmDb::Report do
         expect(actual_output).to match('.........')
       end
     end
-
   end
-
 end
 
 def stub_search_engine_results(data)

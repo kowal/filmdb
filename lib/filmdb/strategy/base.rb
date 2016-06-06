@@ -1,15 +1,12 @@
 # coding: utf-8
 
 module FilmDb
-
   module Strategy
-
     # Base strategy for fetching movie stats.
     #
     # @see FilmDb::Strategy::Simple
     #
     class Base
-
       # @return [Array<Hash>]
       def run(movies)
         movies.map do |movie|
@@ -27,7 +24,5 @@ module FilmDb
         results
       end
     end
-
   end
-
 end
