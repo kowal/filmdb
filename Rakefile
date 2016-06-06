@@ -1,8 +1,13 @@
-require "bundler/gem_tasks"
-require 'rvm-tester'
+require 'bundler/gem_tasks'
+require 'polishgeeks-dev-tools'
 
-RVM::Tester::TesterTask.new(:suite) do |t|
-  t.bundle_install = false
-  t.use_travis     = true
-  t.command        = "bundle exec rspec"
+desc 'Self check using command maintained in this gem'
+task :check do
+  PolishGeeks::DevTools.setup do |config|
+    config.brakeman = false
+  end
+
+  PolishGeeks::DevTools::Runner.new.execute(
+    PolishGeeks::DevTools::Logger.new
+  )
 end

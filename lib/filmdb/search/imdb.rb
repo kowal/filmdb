@@ -1,13 +1,10 @@
 # coding: utf-8
 
-module MoviesReport
-
+module FilmDb
   module Search
-
     # Represents movie search in IMDB service
     #
     class IMDB
-
       def initialize(title)
         @title = title
         @results = read_results
@@ -21,13 +18,9 @@ module MoviesReport
       def read_results
         Imdb::Search.new(@title).movies
       rescue => e
-        ap "Can fetch IMDB results for #{@title}"
-        ap e.message
+        $stderr.puts "I Can't fetch IMDB results for #{@title}. Reason: #{e.message}"
         []
       end
-
     end
-
   end
-
 end

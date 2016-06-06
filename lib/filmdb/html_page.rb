@@ -5,8 +5,7 @@ require 'awesome_print'
 require 'net/http'
 require 'uri'
 
-module MoviesReport
-
+module FilmDb
   # HtmlPage
   # - fetches html page
   # - uses Nokogiri, Net:HTTP
@@ -18,10 +17,9 @@ module MoviesReport
       @uri = uri.respond_to?(:host) ? uri : URI(URI.encode(uri))
       @document = Nokogiri::HTML(Net::HTTP.get_response(@uri).body)
     rescue => e
-      ap "Cant fetch page from : '#{@uri}' #{e.message}"
-      ap e.backtrace
+      $stderr.puts "Cant fetch page from : '#{@uri}' #{e.message}"
+      $stderr.puts e.backtrace
       nil
     end
   end
-
 end

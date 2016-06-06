@@ -2,5 +2,5 @@
 --require ./spec/support/rspec_html_templates.rb
 --require ./spec/support/rspec_html_formatter.rb
 --require ./spec/spec_helper.rb
---format RspecHtmlFormatter --out specs.html
 --format progress
+--order random

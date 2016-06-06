@@ -10,13 +10,14 @@ else
   end
 end
 
-require 'movies_report'
+require 'fakeredis'
+require 'filmdb'
 require 'vcr'
 
+require 'rspec/collection_matchers'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.order = 'random'
   config.mock_framework = :mocha
   config.project_tracker_url = 'https://mkowalcze.kanbanery.com/projects/32672/board/tasks/%s'
@@ -28,5 +29,18 @@ VCR.configure do |config|
 end
 
 def expected_results_for_site(site)
-  YAML::load(File.open("fixtures/expected/#{site}.yml"))
+  YAML.load(File.open("fixtures/expected/#{site}.yml"))
 end
+
+def capture_stdout
+  original_stdout = $stdout
+  $stdout = fake = StringIO.new
+  begin
+    yield
+  ensure
+    $stdout = original_stdout
+  end
+  fake.string
+end
+
+Sidekiq::Logging.logger = nil

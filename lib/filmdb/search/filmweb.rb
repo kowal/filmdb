@@ -1,14 +1,13 @@
 # coding: utf-8
 
-module MoviesReport
+require 'filmdb/search/filmweb_service'
 
+module FilmDb
   module Search
-
     # Represents movie search in Filmweb service
     #
     class Filmweb
-
-      def initialize(title, service=FilmwebService)
+      def initialize(title, service = FilmwebService)
         @title = title
         @result = service.find(title)
       end
@@ -22,12 +21,10 @@ module MoviesReport
 
       # "7,1/10" => "7.1"
       def format_rating(rating)
-        Float(rating.gsub(/\/.*/, '').gsub(',', '.'))
+        Float(rating.gsub(/\/.*/, '').tr(',', '.'))
       rescue ArgumentError
         nil
       end
     end
-
   end
-
 end

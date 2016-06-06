@@ -6,8 +6,7 @@ require 'pathname'
 bin_file = Pathname.new(__FILE__).realpath
 
 # add self to libpath
-$:.unshift File.expand_path("../../lib", bin_file)
+$LOAD_PATH.unshift File.expand_path('../../lib', bin_file)
 
-require 'movies_report'
-
-MoviesReport::CLI.start(ARGV)
+require 'filmdb'
+FilmDb::Cli::App.start(ARGV)
