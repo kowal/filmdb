@@ -4,10 +4,7 @@
 [![Dependency Status](https://gemnasium.com/kowal/filmdb.png)](https://gemnasium.com/kowal/filmdb)
 [![Coverage Status](https://coveralls.io/repos/kowal/filmdb/badge.png?branch=master)](https://coveralls.io/r/kowal/filmdb?branch=master)
 [![Code Climate](https://codeclimate.com/github/kowal/filmdb.png)](https://codeclimate.com/github/kowal/filmdb)
-[![Codeship Status for kowal/movies_report](https://www.codeship.io/projects/4f92a8e0-bce3-0130-8880-5ea7310bec9c/status?branch=master)](https://www.codeship.io/projects/4462)
-
 [![Codeship Status for kowal/filmdb](https://www.codeship.io/projects/4f92a8e0-bce3-0130-8880-5ea7310bec9c/status?branch=master)](https://www.codeship.io/projects/4462)
-
 [![PullReview stats](https://www.pullreview.com/github/kowal/filmdb/badges/add-sidekiq.svg?)](https://www.pullreview.com/github/kowal/filmdb/reviews/add-sidekiq)
 
 **This project is work in progress..**
