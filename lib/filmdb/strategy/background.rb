@@ -1,18 +1,15 @@
 # coding: utf-8
 
 module FilmDb
-
   module Strategy
-
     # Strategy for retrieving movies stats in background (none-blocking)
     #
     # Uses FilmDb::WebSearchWorker internally.
     #
     class Background < Base
-
       # @return [String] worker_id ID which fetches info for given title
       #
-      def each_film(title, service, service_key)
+      def each_film(title, _service, service_key)
         FilmDb::WebSearchWorker.perform_async(title, service_key)
       end
 
@@ -32,7 +29,7 @@ module FilmDb
           return {} unless stats.valid? # TODO: this should not be required
 
           results.increment_state_counter(stats['state'])
-          results.add_rating(stats['title'], stats.get_rating)
+          results.add_rating(stats['title'], stats.rating)
         end
 
         results.calculate_ratings
@@ -44,7 +41,6 @@ module FilmDb
 
       # @private
       class StatsCollection
-
         def initialize
           @results = {}
           @hash_results = { status: { started: 0, finished: 0 } }
@@ -62,16 +58,16 @@ module FilmDb
 
         def calculate_ratings
           @results.map do |title, ratings|
-            @hash_results[title] = (ratings.compact.reduce { |sum, el| sum + el }.to_f / ratings.size).round(1)
+            @hash_results[title] =
+              (ratings.compact.reduce { |sum, el| sum + el }.to_f / ratings.size)
+              .round(1)
           end
           @hash_results
         end
-
       end
 
       # @private
       class ResultsStats
-
         def initialize(data)
           @data = data
         end
@@ -84,18 +80,14 @@ module FilmDb
           @data['state'] != nil
         end
 
-        def get_rating
+        def rating
           Float(@data['rating']) if valid_rating?(@data['rating'])
         end
 
         def valid_rating?(rating)
           rating && rating != '' && rating != '0.0'
         end
-
       end
-
     end
-
   end
-
 end

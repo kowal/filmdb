@@ -1,7 +1,6 @@
 # coding: utf-8
 
 module FilmDb
-
   # Stores/reads Sidekiq workers IDs
   #
   # Store
@@ -13,16 +12,13 @@ module FilmDb
   #   statuses # => [ '732939232', '9688471622', ... ]
   #
   class BackgroundJob
-
     # Provides 'storage' instance (Redis i-face)
     STORAGE = Redis.new
 
     class << self
-
       def find(job_id)
         JSON.parse(STORAGE.get(job_id.to_s))
       end
-
     end
 
     def initialize(workers_ids)
@@ -40,6 +36,5 @@ module FilmDb
     def next_job_id
       STORAGE.incr 'movies-report-last-job'
     end
-
   end
 end

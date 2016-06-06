@@ -7,7 +7,7 @@ require 'sidekiq'
 require 'sidekiq-status'
 require 'ruby-progressbar'
 require 'redis'
-require "json"
+require 'json'
 
 Sidekiq.configure_client do |config|
   config.client_middleware do |chain|
@@ -22,7 +22,6 @@ Sidekiq.configure_server do |config|
 end
 
 module FilmdDb
-
   require 'filmdb/version'
   require 'filmdb/config'
 

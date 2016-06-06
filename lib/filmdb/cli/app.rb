@@ -1,24 +1,21 @@
 # coding: utf-8
 
 module FilmDb
-
   module Cli
-
     # Command Line i-face for FilmDb
     #
     class App
-
       # How often progress-bar will be refreshed
       CLI_JOB_REFRESH_INTERVAL = 0.5
       # Proc for formatting logger output
       CLI_LOG_FORMATTER        = proc { |_, _, _, msg| "[FilmDB] #{msg}\n" }
       # Defualt options used for creating FilmDb::Report
-      CLI_DEFAULT_OPTIONS      = { engine: Source::Chomikuj }
+      CLI_DEFAULT_OPTIONS      = { engine: Source::Chomikuj }.freeze
 
       def self.start(argv)
         options = parse_options(argv)
         setup_logging
-        self.run(options.marshal_dump)
+        run(options.marshal_dump)
       end
 
       def self.setup_logging
@@ -37,14 +34,14 @@ module FilmDb
         url    = report_options[:url]
 
         result = if job_id
-          job_status(read_job(job_id))
-        else
-          report = create_report url: url
-          if keep
-            refresh_job_status(report)
-          else
-            save_job(report)
-          end
+                   job_status(read_job(job_id))
+                 else
+                   report = create_report url: url
+                   if keep
+                     refresh_job_status(report)
+                   else
+                     save_job(report)
+                   end
         end
 
         print_job_results(result)
@@ -89,7 +86,6 @@ module FilmDb
           ap result
         end
       end
-
     end
   end
 end

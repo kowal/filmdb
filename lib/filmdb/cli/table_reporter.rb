@@ -3,13 +3,10 @@
 require 'terminal-table'
 
 module FilmDb
-
   module Cli
-
     # Prints movie stats as table in terminal.
     #
     class TableReporter
-
       def initialize(movies_stats, options = {})
         @colorize     = options.fetch(:colorize) { true }
         @movies_stats = movies_stats
@@ -22,13 +19,13 @@ module FilmDb
       def table_structure
         rows = @movies_stats.map { |movie| display_movie_stats(movie) }
 
-        Terminal::Table.new title:    "Movies stats",
+        Terminal::Table.new title:    'Movies stats',
                             headings: movies_stats_header,
                             rows:     rows
       end
 
       def movies_stats_header
-        %w{ Title Filmweb Imdb Avg }
+        %w( Title Filmweb Imdb Avg )
       end
 
       def display_movie_stats(movie)
@@ -40,26 +37,28 @@ module FilmDb
       end
 
       def movie_ratings_columns(ratings)
-        ratings.map do |service, rating|
+        ratings.map do |_service, rating|
           rating_cell(rating)
         end
       end
 
       def average_rating(ratings)
         total = ratings.values.compact
-          .reduce { |sum, el| sum + el }.to_f
+                       .reduce { |sum, el| sum + el }.to_f
         rating_cell(total / ratings.size)
       end
 
       def valid_rating?(rating)
-        Float(rating) rescue false
+        Float(rating)
+      rescue
+        false
       end
 
       def rating_cell(rating)
         display_value = if valid_rating?(rating)
-          ranking_color(rating)
-        else
-          '-'
+                          ranking_color(rating)
+                        else
+                          '-'
         end
         { value: display_value, alignment: :center }
       end
@@ -82,7 +81,5 @@ module FilmDb
         "\e[#{color_code}m#{str}\e[0m"
       end
     end
-
   end
-
 end

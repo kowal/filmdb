@@ -14,7 +14,6 @@ FilmDb.configure do |config|
 end
 
 module FilmDb
-
   # Sidekiq worker class, which can
   # - schedule job for fetching movie stats in given movies service
   # - provide way to read status of given job
@@ -48,8 +47,7 @@ module FilmDb
     end
 
     def self.get_worker_data(worker_id)
-      Sidekiq::Status::get_all(worker_id)
+      Sidekiq::Status.get_all(worker_id)
     end
-
   end
 end

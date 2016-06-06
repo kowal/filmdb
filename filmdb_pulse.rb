@@ -1,6 +1,6 @@
 #!/bin/ruby
 
-require File.expand_path("../pulse/lib/pulse", __FILE__)
+require File.expand_path('../pulse/lib/pulse', __FILE__)
 
 current_git_branch = `git rev-parse --abbrev-ref HEAD`.chop
 

@@ -3,9 +3,7 @@
 require 'uri'
 
 module FilmDb
-
   class << self
-
     attr_accessor :logger
 
     # Simple config helper
@@ -42,5 +40,4 @@ module FilmDb
       @services ||= {}
     end
   end
-
 end
