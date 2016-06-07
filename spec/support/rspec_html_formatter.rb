@@ -82,9 +82,9 @@ class RspecHtmlFormatter < RSpec::Core::Formatters::HtmlFormatter
   end
 
   def ensure_valid_config!
-    unless @project_tracker_url
-      puts 'Please set up :project_tracker_url in your rspec config!'
-      exit
-    end
+    return if @project_tracker_url
+
+    puts 'Please set up :project_tracker_url in your rspec config!'
+    exit
   end
 end

@@ -80,7 +80,6 @@ describe FilmDb::Report do
 
       it 'raises BuildError on any exception' do
         report.stubs(:extract_movie_list).raises(StandardError)
-
         expect { report.build! }.to raise_error described_class::BuildError
       end
     end
@@ -105,19 +104,20 @@ describe FilmDb::Report do
   end
 
   context 'run on real page' do
+    let(:expected_movies) do
+      expected_results_for_site('chomikuj')
+    end
+
     it 'finds all movies included in the page', req: '958909' do
       VCR.use_cassette('chomikuj', record: :new_episodes) do
-        expected_movies = expected_results_for_site('chomikuj')
-
         report = described_class.new(engine: FilmDb::Source::Chomikuj,
-                                     url:    'http://chomikuj.pl/mocked-page')
+                                     url: 'http://chomikuj.pl/mocked-page')
 
         actual_output = capture_stdout { report.build! }
 
         # check movies titles
         actual_movies = report.results.map { |m| m[:title] }
         expect(actual_movies).to include(*expected_movies)
-
         # check output for default strategy (dots)
         expect(actual_output).to match('.........')
       end
