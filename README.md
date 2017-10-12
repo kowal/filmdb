@@ -1,5 +1,6 @@
 # FilmDB
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4c2fc0bbe819453e9ae613e41b7b9966)](https://www.codacy.com/app/kowal/filmdb?utm_source=github.com&utm_medium=referral&utm_content=kowal/filmdb&utm_campaign=badger)
 [![Build Status](https://api.travis-ci.org/kowal/filmdb.png)](https://travis-ci.org/kowal/filmdb)
 [![Dependency Status](https://gemnasium.com/kowal/filmdb.png)](https://gemnasium.com/kowal/filmdb)
 [![Coverage Status](https://coveralls.io/repos/kowal/filmdb/badge.png?branch=master)](https://coveralls.io/r/kowal/filmdb?branch=master)
