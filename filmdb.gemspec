@@ -27,7 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'terminal-table', '1.4.5'
   gem.add_dependency 'redis', '3.2.1'
   gem.add_dependency 'sidekiq', '3.3.4'
-  gem.add_dependency 'sidekiq-status', '0.5.3'
+  gem.add_dependency 'sidekiq-status', '0.7.0'
   gem.add_dependency 'ruby-progressbar', '1.9.0'
 
   gem.add_development_dependency 'rake'
