@@ -26,7 +26,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'awesome_print', '1.1.0'
   gem.add_dependency 'terminal-table', '1.4.5'
   gem.add_dependency 'redis', '4.1.0'
-  gem.add_dependency 'sidekiq', '3.3.4'
+  gem.add_dependency 'sidekiq', '5.2.2'
   gem.add_dependency 'sidekiq-status', '1.1.1'
   gem.add_dependency 'ruby-progressbar', '1.9.0'
 
