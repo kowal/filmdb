@@ -35,7 +35,8 @@ module FilmDb
     end
 
     def select_strategy(strategy)
-      FilmDb.strategies[strategy].new
+      strategy_class = FilmDb.strategies[strategy] || (raise BuildError, "Strategy '#{strategy}' is not registered!")
+      strategy_class.new
     end
 
     def select_source(movies_url)

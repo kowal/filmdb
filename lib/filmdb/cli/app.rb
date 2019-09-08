@@ -56,7 +56,7 @@ module FilmDb
       def self.create_report(options)
         options.merge!(CLI_DEFAULT_OPTIONS)
         Report.new(options).tap do |report|
-          report.build!(:background)
+          report.build!(:default)
         end
       end
 
