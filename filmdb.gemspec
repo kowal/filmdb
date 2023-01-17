@@ -25,7 +25,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'imdb', '0.8.2'
   gem.add_dependency 'awesome_print', '1.1.0'
   gem.add_dependency 'terminal-table', '1.4.5'
-  gem.add_dependency 'redis', '4.1.0'
+  gem.add_dependency 'redis', '5.0.6'
   gem.add_dependency 'sidekiq', '5.2.7'
   gem.add_dependency 'sidekiq-status', '1.1.1'
   gem.add_dependency 'ruby-progressbar', '1.10.1'
