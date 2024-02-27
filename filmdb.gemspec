@@ -40,7 +40,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'simplecov'
   gem.add_development_dependency 'coveralls'
   gem.add_development_dependency 'vcr'
-  gem.add_development_dependency 'webmock', ['<= 3.6.2']
+  gem.add_development_dependency 'webmock', ['<= 3.23.0']
   gem.add_development_dependency 'fakeredis'
   gem.add_development_dependency 'syntax'
   gem.add_development_dependency 'rack'
